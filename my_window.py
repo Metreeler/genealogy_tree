@@ -47,14 +47,23 @@ def get_offset(generation, max_generation):
         return 0
 
 
-def draw_tree(tree, size, width, height):
-    if -size * tree.width < tree.x_pos * size < width + size * tree.width \
-            and -6 * size < tree.y_pos * size < height + 6 * size:
-        tree.show(size)
-    if tree.mother_tree is not None:
-        draw_tree(tree.mother_tree, size, width, height)
-    if tree.father_tree is not None:
-        draw_tree(tree.father_tree, size, width, height)
+def draw_tree(tree, size, width, height, downloading):
+    if downloading:
+        if -size * tree.width < tree.x_pos * size < width + size * tree.width \
+                and -6 * size < tree.y_pos * size < height + 6 * size:
+            tree.show(size)
+        if tree.mother_tree is not None:
+            draw_tree(tree.mother_tree, size, width, height, downloading)
+        if tree.father_tree is not None:
+            draw_tree(tree.father_tree, size, width, height, downloading)
+    else:
+        if -size < tree.x_pos * size < width + size \
+                and -size < tree.y_pos * size < height + 6 * size:
+            tree.show(size)
+        if tree.mother_tree is not None:
+            draw_tree(tree.mother_tree, size, width, height, downloading)
+        if tree.father_tree is not None:
+            draw_tree(tree.father_tree, size, width, height, downloading)
 
 
 def update_tree_pos(tree, x_change, y_change):
@@ -219,7 +228,7 @@ class MyWindow(pyglet.window.Window):
             self.centuries_line.show(self.person_size, self.width, False)
         else:
             self.centuries_line.show(self.person_size, self.width, True)
-        draw_tree(self.tree, self.person_size, self.width, self.height)
+        draw_tree(self.tree, self.person_size, self.width, self.height, self.downloading)
 
     def update(self, dt):
         self.width, self.height = self.get_size()
