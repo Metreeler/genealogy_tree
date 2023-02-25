@@ -22,7 +22,7 @@ id,surname,birth_name,genre,birth,death,wedding_date,father_id,mother_id,generat
 20,Marie,VILBOUX,F,22-02-1770,28-12-1814,21-09-1795,144,150,7,Breteil,Breteil,Cintre
 21,Pierre,DAUVERGNE,M,20-11-1798,-,28-07-1827,23,24,6,Talensac,Breal-sous-montfort,-
 22,Anne,JEHANNIN,F,20-07-1802,..-..-1858,28-07-1827,25,26,6,Breal-sous-Montfort,Breal-sous-Montfort,-
-23,Vincent,DAUVERGNE,M,..-..-1753,31-05-1823,15-07-1788,284,290,7,Gocen,Breal-sous-Montfort,Breal-sous-Montfort
+23,Vincent,DAUVERGNE,M,..-..-1753,31-05-1823,15-07-1788,284,290,7,Goven,Breal-sous-Montfort,Breal-sous-Montfort
 24,Jeanne,FOUCAUT,F,..-..-1765,13-05-1840,15-07-1788,300,299,7,Breal-sous-Montfort,Breal-sous-Montfort,Talensac
 25,Rene,JEHANNIN,M,25-09-1771,24-07-1835,07-10-1793,317,318,7,Breal-sous-Montfort,Breal-sous-Montfort,Breal-sous-Montfort
 26,Marie,FAVERAIS,F,11-04-1777,07-02-1845,07-10-1793,368,369,7,Breal-sous-Montfort,Breal-sous-Montfort,Breal-sous-Montfort
@@ -592,8 +592,8 @@ id,surname,birth_name,genre,birth,death,wedding_date,father_id,mother_id,generat
 590,Jeanne,JOUBEREL,F,..-..-1740,-,14-02-1765,-1,-1,8,Baulon,Baulon,Baulon
 591,Robert Auguste Joseph,HANGRAN,M,24-03-1907,13-06-1983,07-06-1930,593,594,3,Barentin,Barentin,Caudebec-en-Caux
 592,Suzanne Marie,D'HALLUIN,F,24-12-1908,18-03-2001,07-06-1930,-1,-1,3,Tourcoing,Barentin,Caudebec-en-Caux
-593,Jules Joseph,HANGRAN,M,28-05-1873,-,19-04-1895,601,602,4,Barentin,-,-
-594,Celestine Augustine,PIROUT,F,31-12-1872,19-03-1945,19-04-1895,595,596,4,Barentin,-,Barentin
+593,Jules Joseph,HANGRAN,M,28-05-1873,-,19-04-1898,601,602,4,Barentin,Barentin,-
+594,Celestine Augustine,PIROUT,F,31-12-1872,19-03-1945,19-04-1898,595,596,4,Barentin,Barentin,Barentin
 595,Pierre Auguste,PIROUT,M,25-05-1850,-,13-04-1872,597,598,5,Pavilly,Barentin,-
 596,Celestine Elise,VAUTIER,F,25-04-1851,-,13-04-1872,599,600,5,Barentin,Barentin,-
 597,Pierre Joseph,PIROUT,M,-,-,-,-1,-1,6,-,-,-
@@ -606,9 +606,11 @@ id,surname,birth_name,genre,birth,death,wedding_date,father_id,mother_id,generat
 604,Clotilde,DUGAL,F,28-01-1820,-,31-05-1841,609,610,6,Sainte-Marguerite-sur-Duclair,Barentin,-	
 605,Joseph,PAUMIER,M,-,-,-,-1,-1,6,-,-,-
 606,Zoe Felicite,MORINE,F,-,-,-,-1,-1,6,-,-,-
-607,Nicolas Parfait,ANGRAN,M,18-12-1787,-,23-09-1815,-1,-1,7,Pavilly,Sierville,-
-608,Sophie Marguerite,CANON,F,-,-,23-09-1815,-1,-1,7,-,Sierville,-
-609,Jean Louis,DUGAL,M,-,-,19-02-1819,-1,-1,7,-,Sainte-Marguerite-sur-Duclair,-,Yvetot ?
+607,Nicolas Parfait,ANGRAN,M,18-12-1787,-,23-09-1815,613,614,7,Pavilly,Sierville,-
+608,Sophie Marguerite,CARON,F,-,-,23-09-1815,-1,-1,7,-,Sierville,-
+609,Jean Louis,DUGAL,M,-,-,19-02-1819,-1,-1,7,-,Sainte-Marguerite-sur-Duclair,-
 610,Marie Anne Desiree,THIPHAGNE,F,29-05-1792,21-03-1841,19-02-1819,611,612,7,Yainville,Sainte-Marguerite-sur-Duclair,Barentin
 611,Augustin,THIPHAGNE,M,-,-,-,-1,-1,8,-,-,-
 612,Marie Genevieve,PRUPIN,F,-,-,-,-1,-1,8,-,-,-
+613,Jean Louis,ANGRAN,M,-,-,-,-1,-1,8,-,-,-
+614,Marie Francoise,CARON,F,-,-,-,-1,-1,8,-,-,-

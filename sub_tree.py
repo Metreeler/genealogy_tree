@@ -85,16 +85,17 @@ class SubTree:
                 label1 = pyglet.text.Label(self.person.surname + "\n" +
                                            self.person.birth_name + "\n" +
                                            self.person.birth + "\n" +
+                                           self.person.wedding + "\n" +
                                            self.person.death,
                                            font_name='Arial',
                                            font_size=size / 4,
                                            x=self.x_pos * size - 3 * size / 8,
-                                           y=self.y_pos * size - size,
-                                           anchor_x='center',
-                                           anchor_y='center',
+                                           y=self.y_pos * size,
+                                           anchor_x='left',
+                                           anchor_y='top',
                                            color=(0, 0, 0, 255),
                                            multiline=True,
-                                           width=1)
+                                           width=10)
                 label1.draw()
         else:
             if self.father is not None:
@@ -159,23 +160,24 @@ class SubTree:
                 label1 = pyglet.text.Label(self.person.surname + "\n" +
                                            self.person.birth_name + "\n" +
                                            self.person.birth + "\n" +
+                                           self.person.wedding + "\n" +
                                            self.person.death,
                                            font_name='Arial',
                                            font_size=size / 4,
                                            x=(self.x_pos + 2) * size - size / 2,
-                                           y=self.y_pos * size - size,
-                                           anchor_x='center',
-                                           anchor_y='center',
+                                           y=self.y_pos * size,
+                                           anchor_x='left',
+                                           anchor_y='top',
                                            color=(0, 0, 0, 255),
                                            multiline=True,
                                            width=1)
-                label2 = pyglet.text.Label("Leo\nHANGRAN\n19-01-2007\n-",
+                label2 = pyglet.text.Label("Leo\nHANGRAN\n19-01-2007\n-\n-",
                                            font_name='Arial',
                                            font_size=size / 4,
                                            x=(self.x_pos - 2) * size - size / 2,
-                                           y=self.y_pos * size - size,
-                                           anchor_x='center',
-                                           anchor_y='center',
+                                           y=self.y_pos * size,
+                                           anchor_x='left',
+                                           anchor_y='top',
                                            color=(0, 0, 0, 255),
                                            multiline=True,
                                            width=1)

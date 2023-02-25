@@ -47,23 +47,21 @@ def get_offset(generation, max_generation):
         return 0
 
 
-def draw_tree(tree, size, width, height, downloading):
+def draw_tree(tree, size, downloading, on_screen_x, on_screen_y):
     if downloading:
-        if -size * tree.width < tree.x_pos * size < width + size * tree.width \
-                and -6 * size < tree.y_pos * size < height + 6 * size:
+        if -1 < tree.x_pos < on_screen_x + tree.width and -6 < tree.y_pos < on_screen_y + 6:
             tree.show(size)
         if tree.mother_tree is not None:
-            draw_tree(tree.mother_tree, size, width, height, downloading)
+            draw_tree(tree.mother_tree, size, downloading, on_screen_x, on_screen_y)
         if tree.father_tree is not None:
-            draw_tree(tree.father_tree, size, width, height, downloading)
+            draw_tree(tree.father_tree, size, downloading, on_screen_x, on_screen_y)
     else:
-        if -size < tree.x_pos * size < width + size \
-                and -size < tree.y_pos * size < height + 6 * size:
+        if 0 < tree.x_pos < on_screen_x and 0 < tree.y_pos < on_screen_y:
             tree.show(size)
         if tree.mother_tree is not None:
-            draw_tree(tree.mother_tree, size, width, height, downloading)
+            draw_tree(tree.mother_tree, size, downloading, on_screen_x, on_screen_y)
         if tree.father_tree is not None:
-            draw_tree(tree.father_tree, size, width, height, downloading)
+            draw_tree(tree.father_tree, size, downloading, on_screen_x, on_screen_y)
 
 
 def update_tree_pos(tree, x_change, y_change):
@@ -181,7 +179,7 @@ def paste_pictures(x_span, y_span, on_screen_x, on_screen_y, size):
     images = []
     for i in range(x_span * y_span):
         images.append(
-            cv.imread("data/image_parts/" + str(i) + ".png")[size:(on_screen_y * size), 16:(on_screen_x * size)])
+            cv.imread("data/image_parts/" + str(i) + ".png")[size:(on_screen_y * size + 3), 16:(on_screen_x * size)])
     tmp = []
     for i in range(y_span):
         tmp.append(np.concatenate((images[(i * x_span):(i * x_span + x_span)]), axis=1))
@@ -197,7 +195,8 @@ class MyWindow(pyglet.window.Window):
         self.background = pyglet.shapes.Rectangle(0, 0, 3000, 1200, [255, 255, 255])
         self.persons, self.max_generation, self.root = load()
         self.centuries_line = CenturiesLine(self.persons, self.max_generation)
-        self.width, self.height = self.get_size()
+        self.width, self.height = self.get_framebuffer_size()
+        self.last_size = (self.width, self.height)
         self.person_size = 29
         x_pos = int(self.width / self.person_size / 2 - get_offset(self.root.generation, self.max_generation))
         self.tree = grow_tree(self.root, 0, self.max_generation, {})
@@ -217,9 +216,9 @@ class MyWindow(pyglet.window.Window):
         self.downloading_j = 0
         self.downloading_x = 1
         self.downloading_y = 1
-        self.on_screen_x = 0
-        self.on_screen_y = 0
-        self.time_to_wait = 20
+        self.on_screen_x = int(self.width / self.person_size)
+        self.on_screen_y = int(self.height / self.person_size)
+        self.time_to_wait = 2
         self.time_remaining = self.time_to_wait - 1
 
     def on_draw(self):
@@ -228,57 +227,14 @@ class MyWindow(pyglet.window.Window):
             self.centuries_line.show(self.person_size, self.width, False)
         else:
             self.centuries_line.show(self.person_size, self.width, True)
-        draw_tree(self.tree, self.person_size, self.width, self.height, self.downloading)
+        draw_tree(self.tree, self.person_size, self.downloading, self.on_screen_x, self.on_screen_y)
 
     def update(self, dt):
-        self.width, self.height = self.get_size()
-        scroll_speed = max(15 - self.person_size, 1)
-        if self.scroll_up:
-            update_tree_pos(self.tree, 0, -scroll_speed)
-            self.centuries_line.update(-scroll_speed)
-        elif self.scroll_down:
-            update_tree_pos(self.tree, 0, scroll_speed)
-            self.centuries_line.update(scroll_speed)
-        if self.scroll_right:
-            update_tree_pos(self.tree, -scroll_speed, 0)
-        elif self.scroll_left:
-            update_tree_pos(self.tree, scroll_speed, 0)
-        if self.need_update:
-            self.persons, self.max_generation, self.root = load()
-            temporary_offset_x, temporary_offset_y = self.tree.x_pos, self.tree.y_pos
-            self.tree = grow_tree(self.root, 0, self.max_generation, {})
-            x_positions = get_tree_positions(self.tree, [])
-            x_positions.sort()
-            father_x_positions, mother_x_positions = split_list(x_positions)
-            remove_empty_spaces(self.tree.father_tree, father_x_positions, True)
-            remove_empty_spaces(self.tree.mother_tree, mother_x_positions, False)
-            update_tree_pos(self.tree, temporary_offset_x, temporary_offset_y)
-            self.need_update = False
+        self.check_size()
+        self.scrolling()
+        self.updating()
         if self.downloading:
-            if self.time_remaining == 0:
-                print(self.downloading_j, self.downloading_i)
-                pyglet.image.get_buffer_manager().get_color_buffer()\
-                    .save("data/image_parts/" + str(self.downloading_j *
-                                                    (self.downloading_x + 1) + self.downloading_i) + ".png")
-                if self.downloading_i == self.downloading_x and self.downloading_j == self.downloading_y:
-                    self.downloading = False
-                    paste_pictures(self.downloading_x + 1, self.downloading_y + 1, self.on_screen_x, self.on_screen_y,
-                                   self.person_size)
-                    self.minimize()
-                    print("Done !")
-                elif self.downloading_i == self.downloading_x:
-                    self.downloading_i = 0
-                    self.downloading_j += 1
-                    update_tree_pos(self.tree, self.on_screen_x * (self.downloading_x + 1), -self.on_screen_y)
-                    self.centuries_line.update(-self.on_screen_y)
-                else:
-                    self.downloading_i += 1
-                self.time_remaining = self.time_to_wait
-            elif self.time_remaining == self.time_to_wait:
-                update_tree_pos(self.tree, -self.on_screen_x, 0)
-                self.time_remaining -= 1
-            else:
-                self.time_remaining -= 1
+            self.downloading_process()
 
     def on_key_press(self, symbol, modifiers):
         if not self.downloading:
@@ -328,6 +284,8 @@ class MyWindow(pyglet.window.Window):
         if not self.downloading:
             if self.person_size + scroll_y > 0:
                 self.person_size += scroll_y
+                self.on_screen_x = int(self.width / self.person_size)
+                self.on_screen_y = int(self.height / self.person_size)
 
     def get_person(self, tree, x, y):
         if tree.x_pos * self.person_size < x < (tree.x_pos + 1) * self.person_size and \
@@ -437,3 +395,61 @@ class MyWindow(pyglet.window.Window):
             self.get_person(tree.mother_tree, x, y)
         elif tree.father_tree is not None:
             self.get_person(tree.father_tree, x, y)
+
+    def check_size(self):
+        if self.last_size != (self.width, self.height):
+            self.on_screen_x = int(self.width / self.person_size)
+            self.on_screen_y = int(self.height / self.person_size)
+            self.last_size = (self.width, self.height)
+
+    def scrolling(self):
+        scroll_speed = max(15 - self.person_size, 1)
+        if self.scroll_up:
+            update_tree_pos(self.tree, 0, -scroll_speed)
+            self.centuries_line.update(-scroll_speed)
+        elif self.scroll_down:
+            update_tree_pos(self.tree, 0, scroll_speed)
+            self.centuries_line.update(scroll_speed)
+        if self.scroll_right:
+            update_tree_pos(self.tree, -scroll_speed, 0)
+        elif self.scroll_left:
+            update_tree_pos(self.tree, scroll_speed, 0)
+
+    def updating(self):
+        if self.need_update:
+            self.persons, self.max_generation, self.root = load()
+            temporary_offset_x, temporary_offset_y = self.tree.x_pos, self.tree.y_pos
+            self.tree = grow_tree(self.root, 0, self.max_generation, {})
+            x_positions = get_tree_positions(self.tree, [])
+            x_positions.sort()
+            father_x_positions, mother_x_positions = split_list(x_positions)
+            remove_empty_spaces(self.tree.father_tree, father_x_positions, True)
+            remove_empty_spaces(self.tree.mother_tree, mother_x_positions, False)
+            update_tree_pos(self.tree, temporary_offset_x, temporary_offset_y)
+            self.need_update = False
+
+    def downloading_process(self):
+        if self.time_remaining == 0:
+            print(self.downloading_j, self.downloading_i)
+            pyglet.image.get_buffer_manager().get_color_buffer()\
+                .save("data/image_parts/" + str(self.downloading_j *
+                                                (self.downloading_x + 1) + self.downloading_i) + ".png")
+            if self.downloading_i == self.downloading_x and self.downloading_j == self.downloading_y:
+                self.downloading = False
+                paste_pictures(self.downloading_x + 1, self.downloading_y + 1, self.on_screen_x, self.on_screen_y,
+                               self.person_size)
+                self.minimize()
+                print("Done !")
+            elif self.downloading_i == self.downloading_x:
+                self.downloading_i = 0
+                self.downloading_j += 1
+                update_tree_pos(self.tree, self.on_screen_x * (self.downloading_x + 1), -self.on_screen_y)
+                self.centuries_line.update(-self.on_screen_y)
+            else:
+                self.downloading_i += 1
+            self.time_remaining = self.time_to_wait
+        elif self.time_remaining == self.time_to_wait:
+            update_tree_pos(self.tree, -self.on_screen_x, 0)
+            self.time_remaining -= 1
+        else:
+            self.time_remaining -= 1
