@@ -49,7 +49,7 @@ def get_offset(generation, max_generation):
 
 def draw_tree(tree, size, downloading, on_screen_x, on_screen_y):
     if downloading:
-        if -1 < tree.x_pos < on_screen_x + tree.width and -6 < tree.y_pos < on_screen_y + 6:
+        if -tree.width < tree.x_pos < on_screen_x + tree.width and -6 < tree.y_pos < on_screen_y + 6:
             tree.show(size)
         if tree.mother_tree is not None:
             draw_tree(tree.mother_tree, size, downloading, on_screen_x, on_screen_y)
@@ -175,11 +175,13 @@ def get_borders(tree):
     return tree.x_pos, tree.y_pos, tree.x_pos, tree.y_pos
 
 
-def paste_pictures(x_span, y_span, on_screen_x, on_screen_y, size):
+def paste_pictures(x_span, y_span, width, height, size):
+    new_width = size * int(width / size)
+    new_height = size * int(height / size)
     images = []
     for i in range(x_span * y_span):
         images.append(
-            cv.imread("data/image_parts/" + str(i) + ".png")[size:(on_screen_y * size + 3), 16:(on_screen_x * size)])
+            cv.imread("data/image_parts/" + str(i) + ".png")[0:new_height, 0:new_width])
     tmp = []
     for i in range(y_span):
         tmp.append(np.concatenate((images[(i * x_span):(i * x_span + x_span)]), axis=1))
@@ -218,7 +220,7 @@ class MyWindow(pyglet.window.Window):
         self.downloading_y = 1
         self.on_screen_x = int(self.width / self.person_size)
         self.on_screen_y = int(self.height / self.person_size)
-        self.time_to_wait = 2
+        self.time_to_wait = 4
         self.time_remaining = self.time_to_wait - 1
 
     def on_draw(self):
@@ -321,7 +323,8 @@ class MyWindow(pyglet.window.Window):
                                             "generation": generation,
                                             "birth_city": birth_city,
                                             "wedding_city": wedding_city,
-                                            "death_city": death_city}, index=[0])
+                                            "death_city": death_city,
+                                            "notes": ""}, index=[0])
                     df = pd.concat([df.loc[:], new_row]).reset_index(drop=True)
                     df.loc[df["id"] == tree.person.person_id, ["mother_id"]] = mother_id
                     df.to_csv("data/family.csv", index=False)
@@ -353,7 +356,8 @@ class MyWindow(pyglet.window.Window):
                                             "generation": generation,
                                             "birth_city": birth_city,
                                             "wedding_city": wedding_city,
-                                            "death_city": death_city}, index=[0])
+                                            "death_city": death_city,
+                                            "notes": ""}, index=[0])
                     df = pd.concat([df.loc[:], new_row]).reset_index(drop=True)
                     df.loc[df["id"] == tree.person.person_id, ["father_id"]] = father_id
                     df.to_csv("data/family.csv", index=False)
@@ -364,7 +368,7 @@ class MyWindow(pyglet.window.Window):
                 df = pd.read_csv("data/family.csv")
                 field = ""
                 available_fields = ["surname", "birth_name", "birth", "death", "wedding_date", "birth_city",
-                                    "wedding_city", "death_city", "c"]
+                                    "wedding_city", "death_city", "c", "notes"]
                 print("=" * 10)
                 print("List of fields : ")
                 for f in available_fields:
@@ -436,7 +440,7 @@ class MyWindow(pyglet.window.Window):
                                                 (self.downloading_x + 1) + self.downloading_i) + ".png")
             if self.downloading_i == self.downloading_x and self.downloading_j == self.downloading_y:
                 self.downloading = False
-                paste_pictures(self.downloading_x + 1, self.downloading_y + 1, self.on_screen_x, self.on_screen_y,
+                paste_pictures(self.downloading_x + 1, self.downloading_y + 1, self.width, self.height,
                                self.person_size)
                 self.minimize()
                 print("Done !")
