@@ -10,6 +10,21 @@ from sub_tree import SubTree
 from centuries_line import CenturiesLine
 
 
+def fill_blanks():
+    df = pd.read_csv("data/family.csv")
+    max_idx = max(df["id"])
+    missing_values = []
+    for i in range(max_idx + 1):
+        if i not in df["id"].values:
+            missing_values.append(i)
+    missing_values = missing_values[::-1]
+    for i in missing_values:
+        df.loc[df["id"] > i, ["id"]] -= 1
+        df.loc[df["mother_id"] > i, ["mother_id"]] -= 1
+        df.loc[df["father_id"] > i, ["father_id"]] -= 1
+    df.to_csv("data/family.csv", index=False)
+
+
 def load():
     p = []
     with open("data/family.csv") as csv_file:
@@ -193,6 +208,7 @@ def paste_pictures(x_span, y_span, width, height, size):
 class MyWindow(pyglet.window.Window):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        fill_blanks()
         self.set_minimum_size(400, 300)
         self.background = pyglet.shapes.Rectangle(0, 0, 3000, 1200, [255, 255, 255])
         self.persons, self.max_generation, self.root = load()
@@ -214,6 +230,9 @@ class MyWindow(pyglet.window.Window):
         self.scroll_left = False
         self.need_update = False
         self.downloading = False
+        self.merging = False
+        self.merge_1 = None
+        self.merge_2 = None
         self.downloading_i = 0
         self.downloading_j = 0
         self.downloading_x = 1
@@ -237,9 +256,13 @@ class MyWindow(pyglet.window.Window):
         self.updating()
         if self.downloading:
             self.downloading_process()
+        if self.merging and self.merge_1 is not None and self.merge_2 is not None:
+            self.merge()
 
     def on_key_press(self, symbol, modifiers):
         if not self.downloading:
+            if symbol == key.M:
+                self.merging = True
             if symbol == key.S:
                 self.person_size = 40
                 self.on_screen_x = int(self.width / self.person_size)
@@ -276,8 +299,30 @@ class MyWindow(pyglet.window.Window):
                 self.scroll_left = False
 
     def on_mouse_press(self, x, y, button, modifiers):
-        if not self.downloading:
+        if self.merging:
+            if self.merge_1 is None:
+                self.merge_1 = self.check_person(self.tree, x, y)
+            elif self.merge_2 is None:
+                self.merge_2 = self.check_person(self.tree, x, y)
+        elif not self.downloading:
             self.get_person(self.tree, x, y)
+
+    def check_person(self, tree, x, y):
+        if tree.x_pos * self.person_size < x < (tree.x_pos + 1) * self.person_size and \
+                tree.y_pos * self.person_size < y < (tree.y_pos + 1) * self.person_size:
+            return tree.person
+        elif tree.mother_tree is not None and tree.father_tree is not None:
+            if self.check_person(tree.mother_tree, x, y) is not None:
+                return self.check_person(tree.mother_tree, x, y)
+            if self.check_person(tree.father_tree, x, y) is not None:
+                return self.check_person(tree.father_tree, x, y)
+        elif tree.mother_tree is not None:
+            if self.check_person(tree.mother_tree, x, y) is not None:
+                return self.check_person(tree.mother_tree, x, y)
+        elif tree.father_tree is not None:
+            if self.check_person(tree.father_tree, x, y) is not None:
+                return self.check_person(tree.father_tree, x, y)
+        return None
 
     def on_mouse_motion(self, x, y, dx, dy):
         pass
@@ -392,7 +437,7 @@ class MyWindow(pyglet.window.Window):
                     self.need_update = True
             print("Done !")
             self.maximize()
-        if tree.mother_tree is not None and tree.father_tree is not None:
+        elif tree.mother_tree is not None and tree.father_tree is not None:
             self.get_person(tree.mother_tree, x, y)
             self.get_person(tree.father_tree, x, y)
         elif tree.mother_tree is not None:
@@ -435,7 +480,7 @@ class MyWindow(pyglet.window.Window):
     def downloading_process(self):
         if self.time_remaining == 0:
             print(self.downloading_j, self.downloading_i)
-            pyglet.image.get_buffer_manager().get_color_buffer()\
+            pyglet.image.get_buffer_manager().get_color_buffer() \
                 .save("data/image_parts/" + str(self.downloading_j *
                                                 (self.downloading_x + 1) + self.downloading_i) + ".png")
             if self.downloading_i == self.downloading_x and self.downloading_j == self.downloading_y:
@@ -457,3 +502,44 @@ class MyWindow(pyglet.window.Window):
             self.time_remaining -= 1
         else:
             self.time_remaining -= 1
+
+    def merge(self):
+        self.minimize()
+        confirm = input(f"Do you really want to merge {self.merge_1.surname} {self.merge_1.birth_name} and "
+                        f"{self.merge_2.surname} {self.merge_2.birth_name} y/[n] : ")
+        if confirm == "y":
+            to_be_kept = ""
+            while to_be_kept not in ["1", "2"]:
+                to_be_kept = input(f"Do you want to keep 1 : {self.merge_1.surname} {self.merge_1.birth_name} or 2 : "
+                                   f"{self.merge_2.surname} {self.merge_2.birth_name} 1/2 : ")
+            if to_be_kept == "1":
+                print(self.get_person_to_delete(self.merge_2))
+            else:
+                print(self.get_person_to_delete(self.merge_1))
+        self.merging = False
+        self.merge_1 = None
+        self.merge_2 = None
+
+        # df = pd.read_csv("data/family.csv")
+        # max_idx = max(df["id"])
+        # missing_values = []
+        # for i in range(max_idx + 1):
+        #     if i not in df["id"].values:
+        #         missing_values.append(i)
+        # missing_values = missing_values[::-1]
+        # for i in missing_values:
+        #     df.loc[df["id"] > i, ["id"]] -= 1
+        #     df.loc[df["mother_id"] > i, ["mother_id"]] -= 1
+        #     df.loc[df["father_id"] > i, ["father_id"]] -= 1
+        # df.to_csv("data/family.csv", index=False)
+
+    def get_person_to_delete(self, person):
+        if person.father is not None and person.mother is not None:
+            return self.get_person_to_delete(person.father) \
+                + self.get_person_to_delete(person.mother) \
+                + [person.person_id]
+        elif person.father is not None:
+            return self.get_person_to_delete(person.father) + [person.person_id]
+        elif person.mother is not None:
+            return self.get_person_to_delete(person.mother) + [person.person_id]
+        return [person.person_id]
