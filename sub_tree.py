@@ -28,7 +28,7 @@ class SubTree:
                                        father.father,
                                        x_pos + self.width / 2,
                                        y_pos + 5,
-                                       father.generation,
+                                       generation + 1,
                                        max_generation,
                                        dictionary)
         if self.mother is not None:
@@ -37,7 +37,7 @@ class SubTree:
                                        mother.father,
                                        x_pos - self.width / 2,
                                        y_pos + 5,
-                                       mother.generation,
+                                       generation + 1,
                                        max_generation,
                                        dictionary)
 

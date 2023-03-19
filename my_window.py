@@ -55,11 +55,11 @@ def load():
     return p, max_generation, root
 
 
-def get_offset(generation, max_generation):
-    if generation > 0:
-        return get_offset(generation - 1, max_generation) + math.pow(2, max_generation - generation - 1)
-    else:
-        return 0
+# def get_offset(generation, max_generation):
+#     if generation > 0:
+#         return get_offset(generation - 1, max_generation) + math.pow(2, max_generation - generation - 1)
+#     else:
+#         return 0
 
 
 def draw_tree(tree, size, downloading, on_screen_x, on_screen_y):
@@ -94,7 +94,7 @@ def grow_tree(person, x_pos, max_generation, dictionary):
                    person.father,
                    x_pos,
                    2 * person.generation + 1,
-                   person.generation,
+                   0,
                    max_generation,
                    dictionary)
 
@@ -111,51 +111,35 @@ def get_number_of_upper_generation(tree):
     return max(mother_gen, father_gen)
 
 
-def set_x_pos_sub_trees(tree, threshold, offset, positive):
-    if positive:
-        if tree.x_pos > threshold:
-            tree.x_pos -= offset
-        if tree.mother_tree is not None:
-            set_x_pos_sub_trees(tree.mother_tree, threshold, offset, positive)
-        if tree.father_tree is not None:
-            set_x_pos_sub_trees(tree.father_tree, threshold, offset, positive)
-    else:
-        if tree.x_pos < threshold:
-            tree.x_pos += offset
-        if tree.mother_tree is not None:
-            set_x_pos_sub_trees(tree.mother_tree, threshold, offset, positive)
-        if tree.father_tree is not None:
-            set_x_pos_sub_trees(tree.father_tree, threshold, offset, positive)
+def set_x_pos_sub_trees(tree, threshold, offset):
+    if tree.x_pos > threshold:
+        tree.x_pos -= offset
+    if tree.mother_tree is not None:
+        set_x_pos_sub_trees(tree.mother_tree, threshold, offset)
+    if tree.father_tree is not None:
+        set_x_pos_sub_trees(tree.father_tree, threshold, offset)
 
 
-def remove_empty_spaces(tree, positions, positive):
-    if positive:
-        index = len(positions) - 1
-        while index > 0:
-            index -= 1
-            offset = abs(positions[index] - positions[index + 1]) - 1
-            if offset > 0:
-                set_x_pos_sub_trees(tree, positions[index], offset, positive)
-    else:
-        index = 0
-        while index < len(positions) - 1:
-            index += 1
-            offset = abs(positions[index] - positions[index - 1]) - 1
-            if offset > 0:
-                set_x_pos_sub_trees(tree, positions[index], offset, positive)
+def remove_empty_spaces(tree, positions):
+    index = len(positions) - 1
+    while index > 0:
+        index -= 1
+        offset = abs(positions[index] - positions[index + 1]) - 1
+        if offset > 0:
+            set_x_pos_sub_trees(tree, positions[index], offset)
 
 
-def split_list(list_x_pos):
-    positive, negative = [], []
-    for elem in list_x_pos:
-        if elem > 0:
-            positive.append(elem)
-        elif elem < 0:
-            negative.append(elem)
-        else:
-            positive.append(elem)
-            negative.append(elem)
-    return positive, negative
+# def split_list(list_x_pos):
+#     positive, negative = [], []
+#     for elem in list_x_pos:
+#         if elem > 0:
+#             positive.append(elem)
+#         elif elem < 0:
+#             negative.append(elem)
+#         else:
+#             positive.append(elem)
+#             negative.append(elem)
+#     return positive, negative
 
 
 def get_tree_positions(tree, positions):
@@ -205,6 +189,14 @@ def paste_pictures(x_span, y_span, width, height, size):
     cv.imwrite("res.png", res)
 
 
+def initialization(tree):
+    x_positions = get_tree_positions(tree, [])
+    update_tree_pos(tree, -min(x_positions), 0)
+    x_positions = get_tree_positions(tree, [])
+    x_positions.sort()
+    remove_empty_spaces(tree, x_positions)
+
+
 class MyWindow(pyglet.window.Window):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -216,14 +208,11 @@ class MyWindow(pyglet.window.Window):
         self.width, self.height = self.get_framebuffer_size()
         self.last_size = (self.width, self.height)
         self.person_size = 29
-        x_pos = int(self.width / self.person_size / 2 - get_offset(self.root.generation, self.max_generation))
         self.tree = grow_tree(self.root, 0, self.max_generation, {})
-        x_positions = get_tree_positions(self.tree, [])
-        x_positions.sort()
-        father_x_positions, mother_x_positions = split_list(x_positions)
-        remove_empty_spaces(self.tree.father_tree, father_x_positions, True)
-        remove_empty_spaces(self.tree.mother_tree, mother_x_positions, False)
+        initialization(self.tree)
+        x_pos = int(self.width / self.person_size / 2) - self.tree.x_pos
         update_tree_pos(self.tree, x_pos, 0)
+
         self.scroll_up = False
         self.scroll_down = False
         self.scroll_right = False
@@ -275,9 +264,9 @@ class MyWindow(pyglet.window.Window):
                 self.downloading_y = int((y_max - y_min) / self.on_screen_y)
                 self.downloading = True
             if symbol == key.Q:
-                update_tree_pos(self.tree, 50, 0)
+                update_tree_pos(self.tree, self.on_screen_x, 0)
             elif symbol == key.D:
-                update_tree_pos(self.tree, -50, 0)
+                update_tree_pos(self.tree, -self.on_screen_x, 0)
             if symbol == key.UP:
                 self.scroll_up = True
             elif symbol == key.DOWN:
@@ -338,6 +327,7 @@ class MyWindow(pyglet.window.Window):
         if tree.x_pos * self.person_size < x < (tree.x_pos + 1) * self.person_size and \
                 tree.y_pos * self.person_size < y < (tree.y_pos + 1) * self.person_size:
             self.minimize()
+            print(tree.x_pos)
             print(tree.person)
 
             action = ""
@@ -469,12 +459,9 @@ class MyWindow(pyglet.window.Window):
             self.persons, self.max_generation, self.root = load()
             temporary_offset_x, temporary_offset_y = self.tree.x_pos, self.tree.y_pos
             self.tree = grow_tree(self.root, 0, self.max_generation, {})
-            x_positions = get_tree_positions(self.tree, [])
-            x_positions.sort()
-            father_x_positions, mother_x_positions = split_list(x_positions)
-            remove_empty_spaces(self.tree.father_tree, father_x_positions, True)
-            remove_empty_spaces(self.tree.mother_tree, mother_x_positions, False)
-            update_tree_pos(self.tree, temporary_offset_x, temporary_offset_y)
+            initialization(self.tree)
+            x_pos = temporary_offset_x - self.tree.x_pos
+            update_tree_pos(self.tree, x_pos, temporary_offset_y)
             self.need_update = False
 
     def downloading_process(self):
@@ -505,33 +492,35 @@ class MyWindow(pyglet.window.Window):
 
     def merge(self):
         self.minimize()
-        confirm = input(f"Do you really want to merge {self.merge_1.surname} {self.merge_1.birth_name} and "
-                        f"{self.merge_2.surname} {self.merge_2.birth_name} y/[n] : ")
-        if confirm == "y":
-            to_be_kept = ""
-            while to_be_kept not in ["1", "2"]:
-                to_be_kept = input(f"Do you want to keep 1 : {self.merge_1.surname} {self.merge_1.birth_name} or 2 : "
-                                   f"{self.merge_2.surname} {self.merge_2.birth_name} 1/2 : ")
-            if to_be_kept == "1":
-                print(self.get_person_to_delete(self.merge_2))
-            else:
-                print(self.get_person_to_delete(self.merge_1))
+        if self.merge_1.person_id == self.merge_2.person_id:
+            print("Already the same person !")
+        else:
+            confirm = input(f"Do you really want to merge {self.merge_1.surname} {self.merge_1.birth_name} and "
+                            f"{self.merge_2.surname} {self.merge_2.birth_name} y/[n] : ")
+            if confirm == "y":
+                to_be_kept = ""
+                while to_be_kept not in ["1", "2"]:
+                    to_be_kept = input(f"Do you want to keep 1 : {self.merge_1.person_id} {self.merge_1.surname} "
+                                       f"{self.merge_1.birth_name} or 2 : {self.merge_2.person_id} {self.merge_2.surname} "
+                                       f"{self.merge_2.birth_name} 1/2 : ")
+                df = pd.read_csv("data/family.csv")
+                if to_be_kept == "1":
+                    to_be_deleted = self.get_person_to_delete(self.merge_2)
+                    df.loc[df["mother_id"] == self.merge_2.person_id, ["mother_id"]] = self.merge_1.person_id
+                    df.loc[df["father_id"] == self.merge_2.person_id, ["father_id"]] = self.merge_1.person_id
+                else:
+                    to_be_deleted = self.get_person_to_delete(self.merge_1)
+                    df.loc[df["mother_id"] == self.merge_1.person_id, ["mother_id"]] = self.merge_2.person_id
+                    df.loc[df["father_id"] == self.merge_1.person_id, ["father_id"]] = self.merge_2.person_id
+                for p_id in to_be_deleted:
+                    df = df.drop(df[df["id"] == p_id].index)
+                df.to_csv("data/family.csv", index=False)
+                fill_blanks()
+                self.need_update = True
+            self.maximize()
         self.merging = False
         self.merge_1 = None
         self.merge_2 = None
-
-        # df = pd.read_csv("data/family.csv")
-        # max_idx = max(df["id"])
-        # missing_values = []
-        # for i in range(max_idx + 1):
-        #     if i not in df["id"].values:
-        #         missing_values.append(i)
-        # missing_values = missing_values[::-1]
-        # for i in missing_values:
-        #     df.loc[df["id"] > i, ["id"]] -= 1
-        #     df.loc[df["mother_id"] > i, ["mother_id"]] -= 1
-        #     df.loc[df["father_id"] > i, ["father_id"]] -= 1
-        # df.to_csv("data/family.csv", index=False)
 
     def get_person_to_delete(self, person):
         if person.father is not None and person.mother is not None:
