@@ -1,11 +1,5 @@
-import csv
-import cv2 as cv
-
-import numpy as np
 import pyglet
-import pandas as pd
 from my_window import MyWindow
-from person import Person
 
 frame_rate = 60.0
 

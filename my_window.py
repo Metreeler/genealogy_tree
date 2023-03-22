@@ -55,13 +55,6 @@ def load():
     return p, max_generation, root
 
 
-# def get_offset(generation, max_generation):
-#     if generation > 0:
-#         return get_offset(generation - 1, max_generation) + math.pow(2, max_generation - generation - 1)
-#     else:
-#         return 0
-
-
 def draw_tree(tree, size, downloading, on_screen_x, on_screen_y):
     if downloading:
         if -tree.width < tree.x_pos < on_screen_x + tree.width and -6 < tree.y_pos < on_screen_y + 6:
@@ -127,19 +120,6 @@ def remove_empty_spaces(tree, positions):
         offset = abs(positions[index] - positions[index + 1]) - 1
         if offset > 0:
             set_x_pos_sub_trees(tree, positions[index], offset)
-
-
-# def split_list(list_x_pos):
-#     positive, negative = [], []
-#     for elem in list_x_pos:
-#         if elem > 0:
-#             positive.append(elem)
-#         elif elem < 0:
-#             negative.append(elem)
-#         else:
-#             positive.append(elem)
-#             negative.append(elem)
-#     return positive, negative
 
 
 def get_tree_positions(tree, positions):
