@@ -1,3 +1,6 @@
 /data/image_parts/
 /.idea/
 /__pycache__/
+/.venv/
+.vscode/
+.angular/
