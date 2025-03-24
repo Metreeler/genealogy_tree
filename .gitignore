@@ -1,6 +1,5 @@
-/data/image_parts/
-/.idea/
-/__pycache__/
-/.venv/
+.idea/
+__pycache__/
+.venv/
 .vscode/
 .angular/
