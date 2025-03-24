@@ -1,1 +1,5 @@
-<p>tree works!</p>
+<div class="tree-frame" #treeframe>
+    <div class="tree" #tree (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)" (mouseleave)="onMouseUp($event)">
+        <app-person [person]="persons" />
+    </div>
+</div>

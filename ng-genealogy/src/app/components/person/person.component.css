@@ -1,0 +1,71 @@
+:host {
+    --path-width: calc(var(--scale-value) * 4px);
+    --path-height: calc(var(--scale-value) * 4rem);
+
+    --person-height: calc(var(--scale-value) * 4rem);
+    --person-width: calc(var(--scale-value) * 11rem);
+
+    --name-width: calc(var(--person-width) - 1rem * var(--scale-value));
+    --border-radius: calc(var(--scale-value) * 1rem);
+    --padding: calc(var(--scale-value) * 0.5rem);
+
+    --font-size: calc(0.89rem * var(--scale-value));
+}
+
+.name {
+    width: calc(var(--name-width) - 2 * var(--padding));
+    height: var(--person-height);
+    border-radius: var(--border-radius);
+    /* background-color: rgb(62, 241, 182); */
+    text-align: center;
+    word-wrap: break-word;
+    padding: var(--padding);
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.person {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "IBMPlexSans";
+    font-size: var(--font-size);
+    width: 100%;
+}
+
+.parents {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+.parent {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-width: var(--person-width);
+}
+
+.empty {
+    width: calc((100% - var(--name-width)) / 2);
+}
+
+.wedding-link {
+    width: calc((100% - var(--name-width)) / 2);
+    position: relative;
+    /* top: calc((var(--person-height) + var(--padding) - var(--path-width)) / 2); */
+    top: calc(var(--person-height) / 2 + var(--padding));
+    height: var(--path-width);
+    background-color: black;
+}
+
+.parent-link {
+    background-color: black;
+    height: var(--path-height);
+    width: var(--path-width);
+    margin-top: calc(-1 * (var(--person-height) / 2 + var(--padding)));
+}

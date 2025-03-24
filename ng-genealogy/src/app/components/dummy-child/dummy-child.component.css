@@ -1,0 +1,5 @@
+.dummy-block {
+    background-color: rgb(229, 160, 160);
+    width: calc(var(--scale-value) * 200px);
+    height: calc(var(--scale-value) * 400px);
+}

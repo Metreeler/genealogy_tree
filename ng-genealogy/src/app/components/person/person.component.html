@@ -1,1 +1,36 @@
-<p>person works!</p>
+<div class="person">
+    @if (hasFather() || hasMother()) {
+        <div class="parents">
+            <div class="parent">
+                @if (hasFather()) {
+                    <app-person  [person]="person()?.father" />
+                }
+            </div>
+            <div class="parent">
+                @if (hasMother()) {
+                    <app-person  [person]="person()?.mother" />
+                }
+            </div>
+        </div>
+    }
+
+    @if (hasFather() || hasMother()) {
+        <div class="parent-link"></div>
+    }
+
+    <div class="flex-row">
+        @if (person()?.gender == "F" && person()?.id != 0) {
+            <div class="wedding-link"></div>
+        } @else {
+            <div class="empty"></div>
+        }
+        
+        <div class="name" [style.background-color]="color()" (click)="getName()"> {{ person()?.surname }} <br> {{ person()?.name }} </div>
+
+        @if (person()?.gender == "M" && person()?.id != 0) {
+            <div class="wedding-link"></div>
+        } @else {
+            <div class="empty"></div>
+        }
+    </div>
+</div>

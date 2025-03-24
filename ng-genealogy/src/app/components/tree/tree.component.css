@@ -1,0 +1,18 @@
+:host{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.tree-frame {
+    background-color: rgb(83, 189, 154);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    user-select: none;
+}
+
+.tree {
+    margin: 1em;
+    width:max-content;
+}

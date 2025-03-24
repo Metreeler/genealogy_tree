@@ -1,0 +1,14 @@
+.main-frame {
+    background-color: rgb(112, 212, 179);
+    position: relative;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    display: flex;
+    overflow: scroll;
+}
+
+.frame {
+    background-color: rgb(159, 125, 190);
+}
