@@ -4,10 +4,8 @@ export class Person {
     name: string = "name";
     gender: string = "gender";
     birth: string = "birth";
-    death: string = "death";
     wedding: string = "wedding";
-    father_id: number = 0;
-    mother_id: number = 0;
+    death: string = "death";
     father: Person|undefined;
     mother: Person|undefined;
     generation: number = 0;

@@ -1,0 +1,33 @@
+<div class="editor">
+    @if (servicePerson()) {
+        <div class="flex-row">
+            <div class="close-button" (click)="onClicked()">&#8680;</div>
+            <div class="flex-column">
+                <button (click)="onSureDeleteClicked()" style="width: 100%;" [hidden]="deletionWanted()">SURE TO DELETE</button>
+                <label>Name</label>
+                <input class="input-field" type="text" [(ngModel)]="person.name">
+                <label>Surname</label>
+                <input class="input-field" type="text" [(ngModel)]="person.surname">
+                <label>Gender</label>
+                <input class="input-field" type="text" [(ngModel)]="person.gender">
+                <label>Birth date</label>
+                <input class="input-field" type="text" [(ngModel)]="person.birth">
+                <label>Death date</label>
+                <input class="input-field" type="text" [(ngModel)]="person.wedding">
+                <label>Wedding date</label>
+                <input class="input-field" type="text" [(ngModel)]="person.death">
+                <label>Birth city</label>
+                <input class="input-field" type="text" [(ngModel)]="person.birth_city">
+                <label>Wedding city</label>
+                <input class="input-field" type="text" [(ngModel)]="person.wedding_city">
+                <label>Death city</label>
+                <input class="input-field" type="text" [(ngModel)]="person.death_city">
+                <label>Notes</label>
+                <input class="input-field" type="text" [(ngModel)]="person.notes">
+                <button (click)="onSaveClicked()" style="width: 100%;">SAVE</button>
+                <button (click)="onDeleteClicked()" style="width: 100%;">DELETE</button>
+                
+            </div>
+        </div>
+    }
+</div>

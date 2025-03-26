@@ -21,12 +21,42 @@ export class PersonComponent{
     const c = this.personService.colors()
     return (c.colors.find(color => color.name == person?.name)?.color || "#3EF1B5")
   });
+  isVisible = computed(() => this.treeService.scale() > 0.4 ? false : true);
 
   constructor(private personService: PersonService, private treeService: TreeService) {
   }
 
-  getName():void {
-    console.log("here");
+  selectPerson():void {
+    if (!this.personService.isDragging()) {
+      const person = this.person()
+      if (this.personService.selectedPerson()) {
+        console.log("here");
+      }
+      
+      this.personService.selectedPerson.set(person)
+      document.documentElement.style.setProperty("--editor-width", "30vw")
+
+      this.personService.getCities().subscribe({
+        next: (data) => {
+          console.log("Cities loaded")
+          this.personService.cities.set(data)
+        },
+        error: (err) => {
+          console.log(err)
+        }
+      });
+      
+
+      this.personService.getMaxId().subscribe({
+        next: (data) => {
+          console.log("Max Id loaded")
+          this.personService.maxId.set(data)
+        },
+        error: (err) => {
+          console.log(err)
+        }
+      });
+    }
   }
 
   hasFather():boolean {

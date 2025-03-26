@@ -1,22 +1,21 @@
 :host{
-    display: block;
-    width: 100%;
+    width: calc(100vw - var(--editor-width));
     height: 100%;
 }
 
 .frame {
     background-color: rgb(236, 234, 82);
-    width: calc(100vw - 2vh);
-    height: 98vh;
+    width: calc(100% - 2vh);
+    height: 98%;
     position: relative;
     top: 1vh;
     left: 1vh;
 }
 
 .content {
-    width: 98%;
-    height: 98%;
+    width: calc(100% - 2vh);
+    height: calc(100% - 2vh);
     position: relative;
-    top: 1%;
-    left: 1%;
+    top: 1vh;
+    left: 1vh;
 }

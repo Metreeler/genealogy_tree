@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { DummyComponent } from "./components/dummy/dummy.component";
-import { TreeComponent } from "./components/tree/tree.component";
 import { FrameComponent } from './components/frame/frame.component';
+import { PersonEditorComponent } from './components/person-editor/person-editor.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    FrameComponent
+    FrameComponent,
+    PersonEditorComponent
 ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

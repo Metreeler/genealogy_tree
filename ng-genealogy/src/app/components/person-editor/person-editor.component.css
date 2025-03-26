@@ -1,0 +1,38 @@
+.editor {
+    background-color: rgb(202, 101, 194);
+    display: block;
+    width: var(--editor-width);
+    height: 100%;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.close-button {
+    background-color: rgb(204, 134, 198);
+    width: 3rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "IBMPlexSans";
+    font-size: large;
+    user-select: none;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.input-field {
+    font-family: "IBMPlexSans";
+    text-transform: uppercase;
+}

@@ -1,7 +1,8 @@
-import { Component, ElementRef, HostListener, viewChild, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, OnInit, Signal, signal, viewChild, ViewChild, WritableSignal } from '@angular/core';
 import { PersonComponent } from '../person/person.component';
 import { Person } from '../../classes/person';
 import { TreeService } from '../../services/tree.service';
+import { PersonService } from '../../services/person.service';
 
 @Component({
   selector: 'app-tree',
@@ -13,9 +14,12 @@ import { TreeService } from '../../services/tree.service';
   templateUrl: './tree.component.html',
   styleUrl: './tree.component.css'
 })
-export class TreeComponent {
+export class TreeComponent implements OnInit{
   
-  persons:Person|undefined;
+  persons: Signal<Person|undefined> = computed(() => {
+    const tree = this.treeService.tree()
+    return tree
+  });
   mouseX = -1;
   mouseY = -1;
 
@@ -23,16 +27,22 @@ export class TreeComponent {
   tree = viewChild<ElementRef<HTMLElement>>("tree")
   mouseDown = false
 
-  constructor(private service: TreeService) {
-    this.service.getTree().subscribe({
-      next: (data) => {
-        console.log("Tree loaded")
-        this.persons = data;
-      },
-      error: (err) => {
-        console.log(err)
-      }
-    });
+  constructor(private treeService: TreeService, private personService: PersonService) {
+    
+  }
+
+  ngOnInit(): void {
+    // this.treeService.getTree().subscribe({
+    //   next: (data) => {
+    //     console.log("Tree loaded")
+    //     this.persons.set(data);
+    //   },
+    //   error: (err) => {
+    //     console.log(err)
+    //   }
+    // });
+    // console.log("here");
+    
   }
 
   @HostListener("window:mousewheel", ["$event"])
@@ -46,9 +56,9 @@ export class TreeComponent {
       scaleMultiplier = 1.05
       
     }
-    this.service.scale *= scaleMultiplier
+    this.treeService.scale.update(value => value * scaleMultiplier)
 
-    document.documentElement.style.setProperty("--scale-value", String(this.service.scale))
+    document.documentElement.style.setProperty("--scale-value", String(this.treeService.scale()))
 
     const e = this.treeFrame();
     if (e) {
@@ -67,16 +77,19 @@ export class TreeComponent {
     this.mouseDown = true
     this.mouseX = event.x
     this.mouseY = event.y
+    this.personService.isDragging.set(false)
     // console.log("is being pressed")
   }
 
   onMouseUp(event:MouseEvent): void {
     this.mouseDown = false
     // console.log("is being released")
+    
   }
 
   onMouseMove(event:MouseEvent): void {
     if (this.mouseDown) {
+      this.personService.isDragging.set(true)
       const e = this.treeFrame();
       if (e) {
         e.nativeElement.scrollTo({

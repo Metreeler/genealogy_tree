@@ -1,9 +1,10 @@
-import json
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from data_service import DataService
 
 app = FastAPI()
-
+    
+data_service = DataService(True)
 
 origins = [
     "*",
@@ -19,16 +20,29 @@ app.add_middleware(
 
 @app.get("/family")
 async def root():
-    # with open("data/family_reduced.json") as f:
-    #     data = json.load(f)
-    with open("data/family.json") as f:
-        data = json.load(f)
-    return data
+    return data_service.get_data()
+
+
+@app.get("/max-id")
+async def root():
+    return data_service.get_max_id()
+
 
 @app.get("/colors")
 async def root():
-    # with open("data/colors_reduced.json") as f:
-    #     data = json.load(f)
-    with open("data/colors.json") as f:
-        data = json.load(f)
-    return data
+    return data_service.get_colors()
+
+
+@app.get("/cities")
+async def root():
+    return data_service.get_cities()
+
+
+@app.post("/update")
+def create_item(item: dict):
+    return {"message": data_service.update_person(item)}
+
+@app.delete("/person/{id}")
+def delete(id: int):
+    return {"message": data_service.delete_person(id)}
+    

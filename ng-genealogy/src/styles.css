@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
-    --scale-value: 1.0;
+    --scale-value: 0.5;
+    --editor-width: 0vw;
 }
 
 body, html{

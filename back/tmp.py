@@ -10,20 +10,68 @@ def get_names(json, name_list):
         return name_list + [json["name"]]
     return name_list
 
+def get_max_id(json):
+    out = json["id"]
+    if json["father"]:
+        out = max(get_max_id(json["father"]), out)
+    if json["mother"]:
+        out = max(get_max_id(json["mother"]), out)
+    return out
+
+def get_id(json, id_list):
+    if json["father"]:
+        id_list = get_id(json["father"], id_list)
+    if json["mother"]:
+        id_list = get_id(json["mother"], id_list)
+    return id_list + [json["id"]]
+
+def max_id(json):
+    out = json["id"]
+    if json["father"]:
+        out = max(max_id(json["father"]), out)
+    if json["mother"]:
+        out = max(max_id(json["mother"]), out)
+    return out
+
+def check_duplicate(json):
+        
+    ids = get_id(json, [])
+    test = []
+    dup = []
+    for i in ids:
+        if i in test:
+            dup.append(i)
+        test.append(i)
+    print(dup)
+    print(max_id(json))
+
+def absent_id(json):
+    ids = get_id(data, [])
+    absent = []
+    for i in range(max_id(data)):
+        if i not in ids:
+            absent.append(i)
+    print(absent)
+    
+
 if __name__ == "__main__":
     # _reduced
+    
     with open("data/family.json") as f:
         data = json.load(f)
     
-    names = get_names(data, [])
+    # names = get_names(data, [])
     
-    out = {"colors":[]}
+    # out = {"colors":[]}
     
-    for name in names:
-        out["colors"].append({
-            "name": name,
-            "color": "#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
-            })
+    # for name in names:
+    #     out["colors"].append({
+    #         "name": name,
+    #         "color": "#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
+    #         })
     
-    with open('data/colors.json', 'w') as f:
-        json.dump(out, f)
+    # with open('data/colors.json', 'w') as f:
+    #     json.dump(out, f)
+        
+    # data = {"moi": 0}
+    # print(data.keys())

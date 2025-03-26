@@ -25,7 +25,11 @@
             <div class="empty"></div>
         }
         
-        <div class="name" [style.background-color]="color()" (click)="getName()"> {{ person()?.surname }} <br> {{ person()?.name }} </div>
+        <div class="name" [style.background-color]="color()" (click)="selectPerson()"> 
+            <div [hidden]="isVisible()">
+                {{ person()?.surname }} <br> {{ person()?.name }} 
+            </div>
+        </div>
 
         @if (person()?.gender == "M" && person()?.id != 0) {
             <div class="wedding-link"></div>
