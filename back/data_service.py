@@ -1,4 +1,5 @@
 import json
+import random
 
 def max_id(json):
     out = json["id"]
@@ -63,6 +64,15 @@ def add_parent(data, id, parent):
     if data["mother"]:
         data["mother"] = add_parent(data["mother"], id, parent)
     return data
+
+def get_names(json, name_list):
+    if json["father"]:
+        name_list = get_names(json["father"], name_list)
+    if json["mother"]:
+        name_list = get_names(json["mother"], name_list)
+    if json["name"] not in name_list:
+        return name_list + [json["name"]]
+    return name_list
     
 
 class DataService:
@@ -138,6 +148,17 @@ class DataService:
     def save_local_data(self):
         with open("data/family" + self.reduced_text + ".json", 'w') as f:
             json.dump(self.data, f)
+        
+        new_names = get_names(self.data, [])
+        for name in new_names:
+            if name not in self.colors.keys():
+                self.colors["colors"].append({
+                    "name": name,
+                    "color": "#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
+                })
+        
+        with open("data/colors" + self.reduced_text + ".json", 'w') as f:
+            json.dump(self.colors, f)
         
         self.cities = cities(self.data, [])
         
