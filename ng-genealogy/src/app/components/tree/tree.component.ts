@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, HostListener, OnInit, Signal, signal, viewChild, ViewChild, WritableSignal } from '@angular/core';
+import { Component, computed, ElementRef, HostListener, Signal, signal, viewChild, ViewChild, WritableSignal } from '@angular/core';
 import { PersonComponent } from '../person/person.component';
 import { Person } from '../../classes/person';
 import { TreeService } from '../../services/tree.service';
@@ -14,7 +14,7 @@ import { PersonService } from '../../services/person.service';
   templateUrl: './tree.component.html',
   styleUrl: './tree.component.css'
 })
-export class TreeComponent implements OnInit{
+export class TreeComponent {
   
   persons: Signal<Person|undefined> = computed(() => {
     const tree = this.treeService.tree()
@@ -28,20 +28,6 @@ export class TreeComponent implements OnInit{
   mouseDown = false
 
   constructor(private treeService: TreeService, private personService: PersonService) {
-    
-  }
-
-  ngOnInit(): void {
-    // this.treeService.getTree().subscribe({
-    //   next: (data) => {
-    //     console.log("Tree loaded")
-    //     this.persons.set(data);
-    //   },
-    //   error: (err) => {
-    //     console.log(err)
-    //   }
-    // });
-    // console.log("here");
     
   }
 

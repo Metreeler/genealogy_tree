@@ -2,30 +2,46 @@
     @if (servicePerson()) {
         <div class="flex-row">
             <div class="close-button" (click)="onClicked()">&#8680;</div>
-            <div class="flex-column">
+            <div class="flex-column fields">
                 <button (click)="onSureDeleteClicked()" style="width: 100%;" [hidden]="deletionWanted()">SURE TO DELETE</button>
-                <label>Name</label>
+                <label class="field-name">Name</label>
                 <input class="input-field" type="text" [(ngModel)]="person.name">
-                <label>Surname</label>
+
+                <label class="field-name">Surname</label>
                 <input class="input-field" type="text" [(ngModel)]="person.surname">
-                <label>Gender</label>
+
+                <label class="field-name">Gender</label>
                 <input class="input-field" type="text" [(ngModel)]="person.gender">
-                <label>Birth date</label>
+
+                <label class="field-name">Birth date</label>
                 <input class="input-field" type="text" [(ngModel)]="person.birth">
-                <label>Death date</label>
+
+                <label class="field-name">Death date</label>
                 <input class="input-field" type="text" [(ngModel)]="person.wedding">
-                <label>Wedding date</label>
+
+                <label class="field-name">Wedding date</label>
                 <input class="input-field" type="text" [(ngModel)]="person.death">
-                <label>Birth city</label>
+
+                <label class="field-name">Birth city</label>
                 <input class="input-field" type="text" [(ngModel)]="person.birth_city">
-                <label>Wedding city</label>
+
+                <label class="field-name">Wedding city</label>
                 <input class="input-field" type="text" [(ngModel)]="person.wedding_city">
-                <label>Death city</label>
+
+                <label class="field-name">Death city</label>
                 <input class="input-field" type="text" [(ngModel)]="person.death_city">
-                <label>Notes</label>
+
+                <label class="field-name">Notes</label>
                 <input class="input-field" type="text" [(ngModel)]="person.notes">
-                <button (click)="onSaveClicked()" style="width: 100%;">SAVE</button>
-                <button (click)="onDeleteClicked()" style="width: 100%;">DELETE</button>
+                
+                <div class="button-container">
+                    <button (click)="onSaveClicked()" style="width: 100%;">SAVE</button>
+                    <button (click)="onDeleteClicked()" style="width: 100%;">DELETE</button>
+                    <div class="flex-row">
+                        <button class="parent-button">Add father</button>
+                        <button class="parent-button">Add mother</button>
+                    </div>
+                </div>
                 
             </div>
         </div>

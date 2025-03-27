@@ -3,6 +3,8 @@
     display: block;
     width: var(--editor-width);
     height: 100%;
+    font-family: "IBMPlexSans";
+    font-size: large;
 }
 
 .flex-row {
@@ -20,8 +22,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-family: "IBMPlexSans";
-    font-size: large;
     user-select: none;
 }
 
@@ -34,5 +34,25 @@
 
 .input-field {
     font-family: "IBMPlexSans";
-    text-transform: uppercase;
+}
+/* 
+.field-name {
+}
+
+.button-container {
+} */
+
+.fields {
+    padding: 1rem;
+    height: auto;
+}
+
+button{
+    height: 2rem;
+    margin: 1rem 0 1rem 0;
+}
+
+.parent-button {
+    height: auto;
+    width: 50%;
 }

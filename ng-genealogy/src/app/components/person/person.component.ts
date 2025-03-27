@@ -29,9 +29,6 @@ export class PersonComponent{
   selectPerson():void {
     if (!this.personService.isDragging()) {
       const person = this.person()
-      if (this.personService.selectedPerson()) {
-        console.log("here");
-      }
       
       this.personService.selectedPerson.set(person)
       document.documentElement.style.setProperty("--editor-width", "30vw")
