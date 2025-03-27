@@ -32,33 +32,12 @@ export class PersonComponent{
       
       this.personService.selectedPerson.set(person)
       document.documentElement.style.setProperty("--editor-width", "30vw")
-
-      this.personService.getCities().subscribe({
-        next: (data) => {
-          console.log("Cities loaded")
-          this.personService.cities.set(data)
-        },
-        error: (err) => {
-          console.log(err)
-        }
-      });
-      
-
-      this.personService.getMaxId().subscribe({
-        next: (data) => {
-          console.log("Max Id loaded")
-          this.personService.maxId.set(data)
-        },
-        error: (err) => {
-          console.log(err)
-        }
-      });
     }
   }
 
   hasFather():boolean {
     const person = this.person()
-    if (person?.father?.id) {
+    if (person?.father?.id && person.notes.includes("check")) {
       return true
     }
     return false
@@ -66,7 +45,7 @@ export class PersonComponent{
 
   hasMother():boolean {
     const person = this.person()
-    if (person?.mother?.id) {
+    if (person?.mother?.id && person.notes.includes("check")) {
       return true
     }
     return false

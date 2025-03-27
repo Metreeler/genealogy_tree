@@ -1,4 +1,4 @@
-import { Component, computed, input, signal, Signal } from '@angular/core';
+import { Component, computed, input, signal, Signal, WritableSignal } from '@angular/core';
 import { Person } from '../../classes/person';
 import { PersonService } from '../../services/person.service';
 import { FormControl, FormsModule } from '@angular/forms';
@@ -29,7 +29,18 @@ export class PersonEditorComponent {
 
   person: Person = new Person();
 
+  cities: WritableSignal<String[]> = signal([])
+
   constructor(private personService: PersonService, private treeService: TreeService) {    
+    this.personService.getCities().subscribe({
+      next: (data) => {
+        console.log(data);
+        this.cities.set(data)
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    })
   }
 
   onClicked():void {
@@ -65,5 +76,51 @@ export class PersonEditorComponent {
       }
     });
     this.deletionWanted.set(true)
+    this.onClicked()
+  }
+
+  hasFather():boolean {
+    const person = this.servicePerson()
+    if (person?.father?.id) {
+      return true
+    }
+    return false
+  }
+
+  hasMother():boolean {
+    const person = this.servicePerson()
+    if (person?.mother?.id) {
+      return true
+    }
+    return false
+  }
+
+  onAddParentClicked(isFather:boolean):void {
+    const parent = new Person()
+    if (isFather) {
+      parent.gender = "M"
+    } else {
+      parent.gender = "F"
+    }
+    parent.generation = this.person.generation + 1
+    this.personService.getMaxId().subscribe({
+      next: (data) => {
+        parent.id = data + 1
+
+        this.personService.postAddParent(this.person.id, parent).subscribe({
+          next: (data) => {
+            console.log(data)
+            this.treeService.setTree()
+            this.onClicked()
+          },
+          error: (err) => {
+            console.log(err)
+          }
+        });
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    });
   }
 }

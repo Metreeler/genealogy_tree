@@ -4,7 +4,7 @@ from data_service import DataService
 
 app = FastAPI()
     
-data_service = DataService(True)
+data_service = DataService(False)
 
 origins = [
     "*",
@@ -41,6 +41,10 @@ async def root():
 @app.post("/update")
 def create_item(item: dict):
     return {"message": data_service.update_person(item)}
+
+@app.post("/parent/{id}")
+def add_parent(id:int, item:dict):
+    return {"message": data_service.add_parent(id, item)}
 
 @app.delete("/person/{id}")
 def delete(id: int):

@@ -15,11 +15,11 @@ def cities(json, city_list):
         city_list = cities(json["mother"], city_list)
     
     if json["birth_city"] not in city_list:
-        return city_list + [json["birth_city"]]
+        city_list = city_list + [json["birth_city"]]
     if json["death_city"] not in city_list:
-        return city_list + [json["death_city"]]
+        city_list = city_list + [json["death_city"]]
     if json["wedding_city"] not in city_list:
-        return city_list + [json["wedding_city"]]
+        city_list = city_list + [json["wedding_city"]]
     
     return city_list
 
@@ -49,6 +49,19 @@ def delete_person(data, id):
         data["father"] = delete_person(data["father"], id)
     if data["mother"]:
         data["mother"] = delete_person(data["mother"], id)
+    return data
+
+def add_parent(data, id, parent):
+    if (data["id"] == id):
+        if parent["gender"] == "M":
+            data["father"] = parent
+        if parent["gender"] == "F":
+            data["mother"] = parent
+            return data
+    if data["father"]:
+        data["father"] = add_parent(data["father"], id, parent)
+    if data["mother"]:
+        data["mother"] = add_parent(data["mother"], id, parent)
     return data
     
 
@@ -85,16 +98,31 @@ class DataService:
             return "Wrong id"
         self.data = update_person(self.data, dict)
     
-        with open("data/family" + self.reduced_text + ".json", 'w') as f:
-            json.dump(self.data, f)
+        self.save_local_data()
             
         return "Person updated"
     
+    def add_parent(self, id, dict:dict):
+        awaited_keys = ['id', 'surname', 'name', 'gender', 'birth', 'death', 'wedding', 'birth_city', 'wedding_city', 'death_city', 'notes']
+        for k in awaited_keys:
+            if k not in dict.keys():
+                return "Missing keys"
+        if dict["id"] < 0:
+            return "Wrong id"
+        dict["father"] = {}
+        dict["mother"] = {}
+        
+        self.data = add_parent(self.data, id, dict)
+        
+        self.save_local_data()
+        
+        return "parent added"
+        
+    
     def delete_person(self, id):
         self.data = delete_person(self.data, id)
-    
-        with open("data/family" + self.reduced_text + ".json", 'w') as f:
-            json.dump(self.data, f)
+        
+        self.save_local_data()
             
         return "Person deleted"
     
@@ -106,3 +134,10 @@ class DataService:
             self.colors = json.load(f)
         
         self.cities = cities(self.data, [])
+        
+    def save_local_data(self):
+        with open("data/family" + self.reduced_text + ".json", 'w') as f:
+            json.dump(self.data, f)
+        
+        self.cities = cities(self.data, [])
+        

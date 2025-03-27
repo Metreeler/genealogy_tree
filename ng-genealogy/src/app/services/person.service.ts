@@ -43,6 +43,11 @@ export class PersonService {
   postUpdatePerson(person: Person): Observable<BackResponse> {
     return this.http.post<BackResponse>("http://localhost:8000/update", person)
   }
+
+  postAddParent(childId: number, parent: Person): Observable<BackResponse> {
+    const url = `http://localhost:8000/parent/${childId}`
+    return this.http.post<BackResponse>(url, parent)
+  }
   
   deletePerson(id: number): Observable<BackResponse> {
     const url = `http://localhost:8000/person/${id}`

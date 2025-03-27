@@ -1,18 +1,18 @@
 export class Person {
-    id: number = 0;
-    surname: string = "surname";
-    name: string = "name";
-    gender: string = "gender";
-    birth: string = "birth";
-    wedding: string = "wedding";
-    death: string = "death";
+    id: number = -1;
+    surname: string = "";
+    name: string = "";
+    gender: string = "";
+    birth: string = "";
+    wedding: string = "";
+    death: string = "";
     father: Person|undefined;
     mother: Person|undefined;
-    generation: number = 0;
-    birth_city: string = "birth_city";
-    wedding_city: string = "wedding_city";
-    death_city: string = "death_city";
-    notes: string = "notes";
+    generation: number = -1;
+    birth_city: string = "";
+    wedding_city: string = "";
+    death_city: string = "";
+    notes: string = "";
 
     constructor() {}
 }

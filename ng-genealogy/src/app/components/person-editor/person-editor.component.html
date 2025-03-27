@@ -16,30 +16,47 @@
                 <label class="field-name">Birth date</label>
                 <input class="input-field" type="text" [(ngModel)]="person.birth">
 
-                <label class="field-name">Death date</label>
+                <label class="field-name">Wedding date</label>
                 <input class="input-field" type="text" [(ngModel)]="person.wedding">
 
-                <label class="field-name">Wedding date</label>
+                <label class="field-name">Death date</label>
                 <input class="input-field" type="text" [(ngModel)]="person.death">
 
                 <label class="field-name">Birth city</label>
-                <input class="input-field" type="text" [(ngModel)]="person.birth_city">
+                <input list="my-city-list" class="input-field" type="text" [(ngModel)]="person.birth_city">
 
                 <label class="field-name">Wedding city</label>
-                <input class="input-field" type="text" [(ngModel)]="person.wedding_city">
+                <input list="my-city-list" class="input-field" type="text" [(ngModel)]="person.wedding_city">
 
                 <label class="field-name">Death city</label>
-                <input class="input-field" type="text" [(ngModel)]="person.death_city">
+                <input list="my-city-list" class="input-field" type="text" [(ngModel)]="person.death_city">
 
                 <label class="field-name">Notes</label>
-                <input class="input-field" type="text" [(ngModel)]="person.notes">
+                <textarea class="input-field" type="text" [(ngModel)]="person.notes"></textarea>
+
+                <datalist id="my-city-list">
+                    @for (city of cities(); track city) {
+                        <option>{{ city }}</option>
+                    }
+                </datalist>
+
+                
                 
                 <div class="button-container">
                     <button (click)="onSaveClicked()" style="width: 100%;">SAVE</button>
                     <button (click)="onDeleteClicked()" style="width: 100%;">DELETE</button>
                     <div class="flex-row">
-                        <button class="parent-button">Add father</button>
-                        <button class="parent-button">Add mother</button>
+                        @if (!hasFather()) {
+                            <button class="parent-button" (click)="onAddParentClicked(true)">Add father</button>
+                        } @else {
+                            <div class="parent-button"></div>
+                        }
+                        
+                        @if (!hasMother()) {
+                            <button class="parent-button" (click)="onAddParentClicked(false)">Add mother</button>
+                        } @else {
+                            <div class="parent-button"></div>
+                        }
                     </div>
                 </div>
                 
