@@ -53,6 +53,14 @@ def absent_id(json):
             absent.append(i)
     print(absent)
     
+def add_field(data, field, default_value):
+    data[field] = default_value
+    if data["father"]:
+        data["father"] = add_field(data["father"], field, default_value)
+    if data["mother"]:
+        data["mother"] = add_field(data["mother"], field, default_value)
+    return data
+    
 
 if __name__ == "__main__":
     # _reduced
@@ -60,18 +68,7 @@ if __name__ == "__main__":
     with open("data/family.json") as f:
         data = json.load(f)
     
-    # names = get_names(data, [])
+    data = add_field(data, "show_parent", True)
     
-    # out = {"colors":[]}
-    
-    # for name in names:
-    #     out["colors"].append({
-    #         "name": name,
-    #         "color": "#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
-    #         })
-    
-    # with open('data/colors.json', 'w') as f:
-    #     json.dump(out, f)
-        
-    # data = {"moi": 0}
-    # print(data.keys())
+    with open('data/family.json', 'w') as f:
+        json.dump(data, f)

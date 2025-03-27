@@ -37,7 +37,7 @@ export class PersonComponent{
 
   hasFather():boolean {
     const person = this.person()
-    if (person?.father?.id && person.notes.includes("check")) {
+    if (person?.father?.id && person.show_parent) {
       return true
     }
     return false
@@ -45,7 +45,7 @@ export class PersonComponent{
 
   hasMother():boolean {
     const person = this.person()
-    if (person?.mother?.id && person.notes.includes("check")) {
+    if (person?.mother?.id && person.show_parent) {
       return true
     }
     return false

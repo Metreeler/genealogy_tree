@@ -13,6 +13,7 @@ export class Person {
     wedding_city: string = "";
     death_city: string = "";
     notes: string = "";
+    show_parent: boolean = true;
 
     constructor() {}
 }

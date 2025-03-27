@@ -36,6 +36,7 @@ def update_person(data, update_values):
         data["wedding_city"] = update_values["wedding_city"]
         data["death_city"] = update_values["death_city"]
         data["notes"] = update_values["notes"]
+        data["show_parent"] = update_values["show_parent"]
         return data
     if data["father"]:
         data["father"] = update_person(data["father"], update_values)
@@ -100,7 +101,7 @@ class DataService:
         return self.cities
     
     def update_person(self, dict: dict):
-        awaited_keys = ['id', 'surname', 'name', 'gender', 'birth', 'death', 'wedding', 'birth_city', 'wedding_city', 'death_city', 'notes']
+        awaited_keys = ['id', 'surname', 'name', 'gender', 'birth', 'death', 'wedding', 'birth_city', 'wedding_city', 'death_city', 'notes', 'show_parent']
         for k in awaited_keys:
             if k not in dict.keys():
                 return "Missing keys"
@@ -113,7 +114,7 @@ class DataService:
         return "Person updated"
     
     def add_parent(self, id, dict:dict):
-        awaited_keys = ['id', 'surname', 'name', 'gender', 'birth', 'death', 'wedding', 'birth_city', 'wedding_city', 'death_city', 'notes']
+        awaited_keys = ['id', 'surname', 'name', 'gender', 'birth', 'death', 'wedding', 'birth_city', 'wedding_city', 'death_city', 'notes', 'show_parent']
         for k in awaited_keys:
             if k not in dict.keys():
                 return "Missing keys"
@@ -133,7 +134,7 @@ class DataService:
         self.data = delete_person(self.data, id)
         
         self.save_local_data()
-            
+        
         return "Person deleted"
     
     def load_local_data(self):
@@ -154,7 +155,7 @@ class DataService:
             if name not in self.colors.keys():
                 self.colors["colors"].append({
                     "name": name,
-                    "color": "#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
+                    "color": "#"+''.join([random.choice('0123456789ABCDEF') for _ in range(6)])
                 })
         
         with open("data/colors" + self.reduced_text + ".json", 'w') as f:
