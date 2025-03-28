@@ -1,66 +1,160 @@
 <div class="editor">
-    @if (servicePerson()) {
-        <div class="flex-row">
-            <div class="close-button" (click)="onClicked()">&#8680;</div>
-            <div class="flex-column fields">
-                <button (click)="onSureDeleteClicked()" style="width: 100%;" [hidden]="deletionWanted()">SURE TO DELETE</button>
-                <label class="field-name">Name</label>
-                <input class="input-field" type="text" [(ngModel)]="person.name">
+  @if (servicePerson()) {
+  <div class="flex-row">
+    <div class="close-button" (click)="onClicked()">&#8680;</div>
+    <div class="flex-column fields container">
+      <button
+        (click)="onSureDeleteClicked()"
+        class="btn btn-warning w-100 mb-1"
+        [hidden]="deletionWanted()"
+      >
+        SURE TO DELETE
+      </button>
 
-                <label class="field-name">Surname</label>
-                <input class="input-field" type="text" [(ngModel)]="person.surname">
+      <div class="mb-1">
+        <label class="form-label small">Name</label>
+        <input
+          class="form-control form-control-sm"
+          type="text"
+          [(ngModel)]="person.name"
+          placeholder="Enter name"
+        />
+      </div>
 
-                <label class="field-name">Birth date</label>
-                <input class="input-field" type="text" [(ngModel)]="person.birth">
+      <div class="mb-1">
+        <label class="form-label small">Surname</label>
+        <input
+          class="form-control form-control-sm"
+          type="text"
+          [(ngModel)]="person.surname"
+          placeholder="Enter surname"
+        />
+      </div>
 
-                <label class="field-name">Wedding date</label>
-                <input class="input-field" type="text" [(ngModel)]="person.wedding">
+      <div class="mb-1">
+        <label class="form-label small">Birth date</label>
+        <input
+          class="form-control form-control-sm"
+          type="text"
+          [(ngModel)]="person.birth"
+          placeholder="Enter birth date"
+        />
+      </div>
 
-                <label class="field-name">Death date</label>
-                <input class="input-field" type="text" [(ngModel)]="person.death">
+      <div class="mb-1">
+        <label class="form-label small">Wedding date</label>
+        <input
+          class="form-control form-control-sm"
+          type="text"
+          [(ngModel)]="person.wedding"
+          placeholder="Enter wedding date"
+        />
+      </div>
 
-                <label class="field-name">Birth city</label>
-                <input list="my-city-list" class="input-field" type="text" [(ngModel)]="person.birth_city">
+      <div class="mb-1">
+        <label class="form-label small">Death date</label>
+        <input
+          class="form-control form-control-sm"
+          type="text"
+          [(ngModel)]="person.death"
+          placeholder="Enter death date"
+        />
+      </div>
 
-                <label class="field-name">Wedding city</label>
-                <input list="my-city-list" class="input-field" type="text" [(ngModel)]="person.wedding_city">
+      <div class="mb-1">
+        <label class="form-label small">Birth city</label>
+        <input
+          list="my-city-list"
+          class="form-control form-control-sm"
+          type="text"
+          [(ngModel)]="person.birth_city"
+          placeholder="Select birth city"
+        />
+      </div>
 
-                <label class="field-name">Death city</label>
-                <input list="my-city-list" class="input-field" type="text" [(ngModel)]="person.death_city">
+      <div class="mb-1">
+        <label class="form-label small">Wedding city</label>
+        <input
+          list="my-city-list"
+          class="form-control form-control-sm"
+          type="text"
+          [(ngModel)]="person.wedding_city"
+          placeholder="Select wedding city"
+        />
+      </div>
 
-                <label class="field-name">Show parents</label>
-                <input class="input-field" type="checkbox" [(ngModel)]="person.show_parent">
+      <div class="mb-1">
+        <label class="form-label small">Death city</label>
+        <input
+          list="my-city-list"
+          class="form-control form-control-sm"
+          type="text"
+          [(ngModel)]="person.death_city"
+          placeholder="Select death city"
+        />
+      </div>
 
-                <label class="field-name">Notes</label>
-                <textarea class="input-field" type="text" [(ngModel)]="person.notes"></textarea>
+      <div class="mb-1 form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [(ngModel)]="person.show_parent"
+          id="showParentsCheck"
+        />
+        <label class="form-check-label small" for="showParentsCheck">
+          Show parents
+        </label>
+      </div>
 
-                <datalist id="my-city-list">
-                    @for (city of cities(); track city) {
-                        <option>{{ city }}</option>
-                    }
-                </datalist>
+      <div class="mb-1">
+        <label class="form-label small">Notes</label>
+        <textarea
+          class="form-control form-control-sm"
+          [(ngModel)]="person.notes"
+          placeholder="Enter notes"
+          rows="2"
+        ></textarea>
+      </div>
 
-                
-                
-                <div class="button-container">
-                    <button (click)="onSaveClicked()" style="width: 100%;">SAVE</button>
-                    <button (click)="onDeleteClicked()" style="width: 100%;">DELETE</button>
-                    <div class="flex-row">
-                        @if (!hasFather()) {
-                            <button class="parent-button" (click)="onAddParentClicked(true)">Add father</button>
-                        } @else {
-                            <div class="parent-button"></div>
-                        }
-                        
-                        @if (!hasMother()) {
-                            <button class="parent-button" (click)="onAddParentClicked(false)">Add mother</button>
-                        } @else {
-                            <div class="parent-button"></div>
-                        }
-                    </div>
-                </div>
-                
-            </div>
+      <datalist id="my-city-list">
+        @for (city of cities(); track city) {
+        <option>{{ city }}</option>
+        }
+      </datalist>
+
+      <div class="button-container">
+        <div class="d-grid gap-1 mb-1">
+          <button (click)="onSaveClicked()" class="btn btn-primary btn-sm">
+            SAVE
+          </button>
+          <button (click)="onDeleteClicked()" class="btn btn-danger btn-sm">
+            DELETE
+          </button>
         </div>
-    }
+
+        <div class="d-flex justify-content-between">
+          @if (!hasFather()) {
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            (click)="onAddParentClicked(true)"
+          >
+            Add father
+          </button>
+          } @else {
+          <div></div>
+          } @if (!hasMother()) {
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            (click)="onAddParentClicked(false)"
+          >
+            Add mother
+          </button>
+          } @else {
+          <div></div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  }
 </div>
