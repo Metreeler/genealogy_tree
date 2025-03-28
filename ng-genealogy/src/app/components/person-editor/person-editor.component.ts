@@ -29,6 +29,8 @@ export class PersonEditorComponent {
 
   person: Person = new Person();
 
+  dataUpdated = signal(false)
+
   cities: WritableSignal<String[]> = signal([])
 
   constructor(private personService: PersonService, private treeService: TreeService) {    
@@ -50,15 +52,31 @@ export class PersonEditorComponent {
   }
 
   onSaveClicked(): void{
-    this.personService.postUpdatePerson(this.person).subscribe({
-      next: (data) => {
-        console.log(data)
-        this.treeService.setTree()
-      },
-      error: (err) => {
-        console.log(err)
-      }
-    });
+    this.saveData()
+  }
+
+  onDataUpdated(): void {
+    this.dataUpdated.set(true)
+  }
+
+  onShowParent():void {
+    this.onDataUpdated()
+    this.saveData()
+  }
+
+  saveData(): void {
+    if (this.dataUpdated()) {
+      this.personService.postUpdatePerson(this.person).subscribe({
+        next: (data) => {
+          console.log(data)
+          this.dataUpdated.set(false)
+          this.treeService.setTree()
+        },
+        error: (err) => {
+          console.log(err)
+        }
+      });
+    }
   }
 
   onDeleteClicked(): void{

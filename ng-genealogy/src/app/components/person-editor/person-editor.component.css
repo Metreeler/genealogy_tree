@@ -5,6 +5,7 @@
   height: 100%;
   font-family: "IBMPlexSans";
   font-size: large;
+  overflow: scroll;
 }
 
 .flex-row {
