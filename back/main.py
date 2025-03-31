@@ -4,7 +4,7 @@ from data_service import DataService
 
 app = FastAPI()
     
-data_service = DataService(True)
+data_service = DataService(False)
 
 origins = [
     "*",
@@ -37,6 +37,9 @@ async def root():
 async def root():
     return data_service.get_cities()
 
+@app.post("/fields")
+def check_fields(item: dict):
+    return {"message": data_service.check_fields(item)}
 
 @app.post("/update")
 def create_item(item: dict):

@@ -13,6 +13,8 @@ export class Person {
     wedding_city: string = "";
     death_city: string = "";
     notes: string = "";
+    job: string = "";
+    address: string = "";
     show_parent: boolean = true;
 
     constructor() {}

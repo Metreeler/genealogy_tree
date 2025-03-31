@@ -110,6 +110,31 @@
         />
       </div>
 
+      <div class="mb-1">
+        <label class="form-label small">Job</label>
+        <input
+          class="form-control form-control-sm"
+          type="text"
+          (focusout)="saveData()"
+          (input)="onDataUpdated()"
+          [(ngModel)]="person.job"
+          placeholder="Enter job"
+        />
+      </div>
+
+      <div class="mb-1">
+        <label class="form-label small">Address</label>
+        <input
+          list="my-city-list"
+          class="form-control form-control-sm"
+          type="text"
+          (focusout)="saveData()"
+          (input)="onDataUpdated()"
+          [(ngModel)]="person.address"
+          placeholder="Enter address"
+        />
+      </div>
+
       <div class="mb-1 form-check">
         <input
           class="form-check-input"

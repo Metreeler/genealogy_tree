@@ -59,6 +59,7 @@ button {
 }
 
 .form-control-sm {
+  width: calc(100% - 1rem);
   font-size: 0.7rem; /* Réduction de la taille de police */
   padding: 0.15rem 0.5rem; /* Réduction du padding */
   height: calc(1.5em + 0.5rem + 2px); /* Réduction de la hauteur */

@@ -36,7 +36,7 @@ export class PersonEditorComponent {
   constructor(private personService: PersonService, private treeService: TreeService) {    
     this.personService.getCities().subscribe({
       next: (data) => {
-        console.log(data);
+        console.log("Cities loaded");
         this.cities.set(data)
       },
       error: (err) => {

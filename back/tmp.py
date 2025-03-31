@@ -68,7 +68,7 @@ if __name__ == "__main__":
     with open("data/family.json") as f:
         data = json.load(f)
     
-    data = add_field(data, "show_parent", True)
+    data = add_field(data, "address", "") 
     
     with open('data/family.json', 'w') as f:
         json.dump(data, f)

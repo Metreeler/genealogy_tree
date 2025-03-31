@@ -21,22 +21,15 @@ def cities(json, city_list):
         city_list = city_list + [json["death_city"]]
     if json["wedding_city"] not in city_list:
         city_list = city_list + [json["wedding_city"]]
+    if json["address"] not in city_list:
+        city_list = city_list + [json["address"]]
     
     return city_list
 
 def update_person(data, update_values):
     if (data["id"] == update_values["id"]):
-        data["surname"] = update_values["surname"]
-        data["name"] = update_values["name"]
-        data["gender"] = update_values["gender"]
-        data["birth"] = update_values["birth"]
-        data["wedding"] = update_values["wedding"]
-        data["death"] = update_values["death"]
-        data["birth_city"] = update_values["birth_city"]
-        data["wedding_city"] = update_values["wedding_city"]
-        data["death_city"] = update_values["death_city"]
-        data["notes"] = update_values["notes"]
-        data["show_parent"] = update_values["show_parent"]
+        for k in update_values.keys():
+            data[k] = update_values[k]
         return data
     if data["father"]:
         data["father"] = update_person(data["father"], update_values)
@@ -74,6 +67,16 @@ def get_names(json, name_list):
     if json["name"] not in name_list:
         return name_list + [json["name"]]
     return name_list
+
+def check_fields(data, fields):
+    for k in fields.keys():
+        if k not in data.keys():
+            data[k] = fields[k]
+    if data["father"]:
+        data["father"] = check_fields(data["father"], fields)
+    if data["mother"]:
+        data["mother"] = check_fields(data["mother"], fields)
+    return data
     
 
 class DataService:
@@ -87,6 +90,12 @@ class DataService:
         self.cities = []
         
         self.load_local_data()
+        
+    def check_fields(self, fields):
+        check_fields(self.data, fields)
+        with open("data/family" + self.reduced_text + ".json", 'w') as f:
+            json.dump(self.data, f)
+        return "Fields checked"
     
     def get_max_id(self):
         return max_id(self.data)
@@ -101,12 +110,6 @@ class DataService:
         return self.cities
     
     def update_person(self, dict: dict):
-        awaited_keys = ['id', 'surname', 'name', 'gender', 'birth', 'death', 'wedding', 'birth_city', 'wedding_city', 'death_city', 'notes', 'show_parent']
-        for k in awaited_keys:
-            if k not in dict.keys():
-                return "Missing keys"
-        if dict["id"] < 0:
-            return "Wrong id"
         self.data = update_person(self.data, dict)
     
         self.save_local_data()

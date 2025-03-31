@@ -14,37 +14,4 @@ import { PersonEditorComponent } from './components/person-editor/person-editor.
 })
 export class AppComponent {
   title = 'ng-genealogy';
-  testDummy = {
-    name: "malo",
-    father: {
-      name: "papa",
-      father: {
-        name: "grand père",
-        father: null,
-        mother: null
-      },
-      mother: {
-        name: "grand mère",
-        father: null,
-        mother: null
-      }
-    },
-    mother: {
-      name: "maman",
-      father: {
-        name: "papy",
-        father: null,
-        mother: null
-      },
-      mother: {
-        name: "mamie",
-        father: null,
-        mother: {
-          name: "grand mamie",
-          father: null,
-          mother: null
-        }
-      }
-    }
-  }
 }
