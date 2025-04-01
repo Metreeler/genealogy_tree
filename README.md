@@ -28,3 +28,7 @@ npm install
 ng serve
 ```
 
+
+# Retrouver un descendant
+Les documents ne peuvent que être recupérées après 100 ans.
+Il faut commencer par trouver la date de naissance 
