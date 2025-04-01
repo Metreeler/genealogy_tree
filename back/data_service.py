@@ -15,13 +15,13 @@ def cities(json, city_list):
     if json["mother"]:
         city_list = cities(json["mother"], city_list)
     
-    if json["birth_city"] not in city_list:
+    if "birth_city" in json.keys() and json["birth_city"] not in city_list:
         city_list = city_list + [json["birth_city"]]
-    if json["death_city"] not in city_list:
+    if "death_city" in json.keys() and json["death_city"] not in city_list:
         city_list = city_list + [json["death_city"]]
-    if json["wedding_city"] not in city_list:
+    if "wedding_city" in json.keys() and json["wedding_city"] not in city_list:
         city_list = city_list + [json["wedding_city"]]
-    if json["address"] not in city_list:
+    if "address" in json.keys() and json["address"] not in city_list:
         city_list = city_list + [json["address"]]
     
     return city_list
@@ -154,12 +154,14 @@ class DataService:
             json.dump(self.data, f)
         
         new_names = get_names(self.data, [])
+        new_colors = []
+        
         for name in new_names:
-            if name not in self.colors.keys():
-                self.colors["colors"].append({
-                    "name": name,
-                    "color": "#"+''.join([random.choice('0123456789ABCDEF') for _ in range(6)])
-                })
+            new_colors.append(next((color for color in self.colors["colors"] if color["name"] == name), {
+                        "name": name,
+                        "color": "#"+''.join([random.choice('0123456789ABCDEF') for _ in range(6)])
+                    }))
+        self.colors["colors"] = new_colors
         
         with open("data/colors" + self.reduced_text + ".json", 'w') as f:
             json.dump(self.colors, f)

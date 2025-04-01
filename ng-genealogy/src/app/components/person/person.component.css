@@ -1,8 +1,8 @@
 :host {
     --path-width: calc(var(--scale-value) * 4px);
-    --path-height: calc(var(--scale-value) * 4rem);
+    --path-height: calc(var(--scale-value) * 7rem);
 
-    --person-height: calc(var(--scale-value) * 4rem);
+    --person-height: calc(var(--scale-value) * 8rem);
     --person-width: calc(var(--scale-value) * 11rem);
 
     --name-width: calc(var(--person-width) - 1rem * var(--scale-value));
@@ -16,7 +16,6 @@
     width: calc(var(--name-width) - 2 * var(--padding));
     height: var(--person-height);
     border-radius: var(--border-radius);
-    /* background-color: rgb(62, 241, 182); */
     text-align: center;
     word-wrap: break-word;
     padding: var(--padding);

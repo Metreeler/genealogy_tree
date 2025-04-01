@@ -65,10 +65,36 @@ def add_field(data, field, default_value):
 if __name__ == "__main__":
     # _reduced
     
-    with open("data/family.json") as f:
+    # with open("data/family.json") as f:
+    #     data = json.load(f)
+    
+    # data = add_field(data, "address", "") 
+    
+    # with open('data/family.json', 'w') as f:
+    #     json.dump(data, f)
+    
+    with open("data/colors_reduced.json") as f:
         data = json.load(f)
     
-    data = add_field(data, "address", "") 
+    new_names = ["HANGRAN", "CATHELINE", "TEST"]
     
-    with open('data/family.json', 'w') as f:
-        json.dump(data, f)
+    new_colors = []
+    
+    for name in new_names:
+        new_colors.append(next((color for color in data["colors"] if color["name"] == name), {
+                    "name": name,
+                    "color": "#"+''.join([random.choice('0123456789ABCDEF') for _ in range(6)])
+                }))
+    
+    print(new_colors)
+    
+    # data = add_field(data, "address", "") 
+    
+    # with open('data/colors_reduced.json', 'w') as f:
+    #     json.dump(data, f)
+        
+        
+    # existing_names = next((col for col in self.colors["colors"] if col["name"] not in ))
+    # for color in self.colors["colors"]:
+    #     if color["name"] not in existing_names:
+    #         existing_names.append(color["name"])

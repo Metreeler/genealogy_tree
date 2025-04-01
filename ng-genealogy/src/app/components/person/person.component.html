@@ -27,7 +27,20 @@
         
         <div class="name" [style.background-color]="color()" (click)="selectPerson()"> 
             <div [hidden]="isVisible()">
-                {{ person()?.surname }} <br> {{ person()?.name }} 
+                {{ person()?.surname }} 
+                <br> {{ person()?.name }}
+                <br>
+                @if (person()?.birth != "") {
+                    x {{ person()?.birth }}
+                }
+                <br>
+                @if (person()?.wedding != "") {
+                    o {{ person()?.wedding }}
+                }
+                <br>
+                @if (person()?.death != "") {
+                    + {{ person()?.death }}
+                }
             </div>
         </div>
 
