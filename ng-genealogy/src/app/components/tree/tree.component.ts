@@ -26,6 +26,7 @@ export class TreeComponent {
   treeFrame = viewChild<ElementRef<HTMLElement>>("treeframe")
   tree = viewChild<ElementRef<HTMLElement>>("tree")
   mouseDown = false
+  mouseOver = false
 
   constructor(private treeService: TreeService, private personService: PersonService) {
     
@@ -33,26 +34,38 @@ export class TreeComponent {
 
   @HostListener("window:mousewheel", ["$event"])
   onScroll(event: WheelEvent): void {
-    var scaleMultiplier = 1.0
-    if (event.deltaY > 0) {
-      // console.log("down")
-      scaleMultiplier = 0.95
-    } else if (event.deltaY < 0) {
-      // console.log("up")
-      scaleMultiplier = 1.05
-      
+    if (this.mouseOver) {
+      var scaleMultiplier = 1.0
+      if (event.deltaY > 0) {
+        // console.log("down")
+        scaleMultiplier = 0.95
+      } else if (event.deltaY < 0) {
+        // console.log("up")
+        scaleMultiplier = 1.05
+        
+      }
+      this.treeService.scale.update(value => value * scaleMultiplier)
+  
+      document.documentElement.style.setProperty("--scale-value", String(this.treeService.scale()))
+  
+      const e = this.treeFrame();
+      if (e) {
+        e.nativeElement.scrollTo({
+          top: (e.nativeElement.scrollTop * scaleMultiplier), 
+          left: (e.nativeElement.scrollLeft * scaleMultiplier)
+        })
+      }
     }
-    this.treeService.scale.update(value => value * scaleMultiplier)
+  }
 
-    document.documentElement.style.setProperty("--scale-value", String(this.treeService.scale()))
+  @HostListener("mouseenter")
+  onMouseEnter(): void {
+    this.mouseOver = true
+  }
 
-    const e = this.treeFrame();
-    if (e) {
-      e.nativeElement.scrollTo({
-        top: (e.nativeElement.scrollTop * scaleMultiplier), 
-        left: (e.nativeElement.scrollLeft * scaleMultiplier)
-      })
-    }
+  @HostListener("mouseleave")
+  onMouseLeave(): void {
+    this.mouseOver = false
   }
 
   getServiceFunction(): void {

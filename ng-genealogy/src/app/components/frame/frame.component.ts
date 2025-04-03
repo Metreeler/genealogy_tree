@@ -10,4 +10,8 @@ import { TreeComponent } from "../tree/tree.component";
 })
 export class FrameComponent {
 
+  onScroll(e: Event):void {
+    console.log(e);
+    
+  }
 }
