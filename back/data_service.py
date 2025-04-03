@@ -37,6 +37,16 @@ def update_person(data, update_values):
         data["mother"] = update_person(data["mother"], update_values)
     return data
 
+def update_parent_visibility(data, id):
+    if (data["id"] == id):
+        data["show_parent"] = not data["show_parent"]
+        return data
+    if data["father"]:
+        data["father"] = update_parent_visibility(data["father"], id)
+    if data["mother"]:
+        data["mother"] = update_parent_visibility(data["mother"], id)
+    return data
+
 def delete_person(data, id):
     if (data["id"] == id):
         return {}
@@ -116,6 +126,10 @@ class DataService:
             
         return "Person updated"
     
+    def update_parent_visibility(self, id):
+        self.data = update_parent_visibility(self.data, id)
+        return "Visibility updated"
+    
     def add_parent(self, id, dict:dict):
         awaited_keys = ['id', 'surname', 'name', 'gender', 'birth', 'death', 'wedding', 'birth_city', 'wedding_city', 'death_city', 'notes', 'show_parent']
         for k in awaited_keys:
@@ -159,7 +173,7 @@ class DataService:
         for name in new_names:
             new_colors.append(next((color for color in self.colors["colors"] if color["name"] == name), {
                         "name": name,
-                        "color": "#"+''.join([random.choice('0123456789ABCDEF') for _ in range(6)])
+                        "color": "#"+''.join([random.choice('456789ABCDEF') + random.choice('0123456789ABCDEF') for _ in range(3)])
                     }))
         self.colors["colors"] = new_colors
         

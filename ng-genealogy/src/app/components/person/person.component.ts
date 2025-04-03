@@ -35,6 +35,22 @@ export class PersonComponent{
     }
   }
 
+  onRightClick(): boolean {
+    const person = this.person()
+    if (person?.id !== undefined) {
+      this.personService.postUpdateParentVisibility(person.id).subscribe({
+        next: (data) => {
+          console.log(data)
+          this.treeService.setTree()
+        },
+        error: (err) => {
+          console.log(err)
+        }
+      });
+    }
+    return false
+  }
+
   hasFather():boolean {
     const person = this.person()
     if (person?.father?.id && person.show_parent) {

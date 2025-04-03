@@ -49,6 +49,10 @@ def create_item(item: dict):
 def add_parent(id:int, item:dict):
     return {"message": data_service.add_parent(id, item)}
 
+@app.post("/parent-visibility/{id}")
+def add_parent(id:int):
+    return {"message": data_service.update_parent_visibility(id)}
+
 @app.delete("/person/{id}")
 def delete(id: int):
     return {"message": data_service.delete_person(id)}

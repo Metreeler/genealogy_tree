@@ -44,6 +44,11 @@ export class PersonService {
     return this.http.post<BackResponse>("http://localhost:8000/update", person)
   }
 
+  postUpdateParentVisibility(childId: number): Observable<BackResponse> {
+    const url = `http://localhost:8000/parent-visibility/${childId}`
+    return this.http.post<BackResponse>(url, {})
+  }
+
   postAddParent(childId: number, parent: Person): Observable<BackResponse> {
     const url = `http://localhost:8000/parent/${childId}`
     return this.http.post<BackResponse>(url, parent)

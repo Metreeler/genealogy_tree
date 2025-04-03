@@ -51,10 +51,6 @@ export class PersonEditorComponent {
     this.deletionWanted.set(true)
   }
 
-  onSaveClicked(): void{
-    this.saveData()
-  }
-
   onDataUpdated(): void {
     this.dataUpdated.set(true)
   }
