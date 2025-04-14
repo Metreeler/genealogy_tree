@@ -24,6 +24,7 @@ fastapi dev main.py --port 8000
 
 # Front
 ```sh
+cd ng-genealogy
 npm install
 ng serve
 ```
