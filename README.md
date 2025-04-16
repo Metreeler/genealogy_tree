@@ -12,7 +12,7 @@ If on Windows (on Visual Studio Code) :
 ```sh
 cd back/
 python -m venv .venv
-.venv/bin/activate
+.venv/bin/activate (essayer aussi .venv/Scripts/activate)
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
@@ -24,6 +24,7 @@ fastapi dev main.py --port 8000
 
 # Front
 ```sh
+cd ng-genealogy
 npm install
 ng serve
 ```
