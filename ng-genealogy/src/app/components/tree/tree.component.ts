@@ -31,8 +31,9 @@ export class TreeComponent {
     
   }
 
-  @HostListener("mousewheel", ["$event"])
+  @HostListener("wheel", ["$event"])
   onScroll(event: WheelEvent): void {
+    
     var scaleMultiplier = 1.0
     if (event.deltaY > 0) {
       // console.log("down")

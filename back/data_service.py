@@ -1,92 +1,7 @@
 import json
 import random
-
-def max_id(json):
-    out = json["id"]
-    if json["father"]:
-        out = max(max_id(json["father"]), out)
-    if json["mother"]:
-        out = max(max_id(json["mother"]), out)
-    return out
-
-def cities(json, city_list):
-    if json["father"]:
-        city_list = cities(json["father"], city_list)
-    if json["mother"]:
-        city_list = cities(json["mother"], city_list)
-    
-    if "birth_city" in json.keys() and json["birth_city"] not in city_list:
-        city_list = city_list + [json["birth_city"]]
-    if "death_city" in json.keys() and json["death_city"] not in city_list:
-        city_list = city_list + [json["death_city"]]
-    if "wedding_city" in json.keys() and json["wedding_city"] not in city_list:
-        city_list = city_list + [json["wedding_city"]]
-    if "address" in json.keys() and json["address"] not in city_list:
-        city_list = city_list + [json["address"]]
-    
-    return city_list
-
-def update_person(data, update_values):
-    if (data["id"] == update_values["id"]):
-        for k in update_values.keys():
-            data[k] = update_values[k]
-        return data
-    if data["father"]:
-        data["father"] = update_person(data["father"], update_values)
-    if data["mother"]:
-        data["mother"] = update_person(data["mother"], update_values)
-    return data
-
-def update_parent_visibility(data, id):
-    if (data["id"] == id):
-        data["show_parent"] = not data["show_parent"]
-        return data
-    if data["father"]:
-        data["father"] = update_parent_visibility(data["father"], id)
-    if data["mother"]:
-        data["mother"] = update_parent_visibility(data["mother"], id)
-    return data
-
-def delete_person(data, id):
-    if (data["id"] == id):
-        return {}
-    if data["father"]:
-        data["father"] = delete_person(data["father"], id)
-    if data["mother"]:
-        data["mother"] = delete_person(data["mother"], id)
-    return data
-
-def add_parent(data, id, parent):
-    if (data["id"] == id):
-        if parent["gender"] == "M":
-            data["father"] = parent
-        if parent["gender"] == "F":
-            data["mother"] = parent
-            return data
-    if data["father"]:
-        data["father"] = add_parent(data["father"], id, parent)
-    if data["mother"]:
-        data["mother"] = add_parent(data["mother"], id, parent)
-    return data
-
-def get_names(json, name_list):
-    if json["father"]:
-        name_list = get_names(json["father"], name_list)
-    if json["mother"]:
-        name_list = get_names(json["mother"], name_list)
-    if json["name"] not in name_list:
-        return name_list + [json["name"]]
-    return name_list
-
-def check_fields(data, fields):
-    for k in fields.keys():
-        if k not in data.keys():
-            data[k] = fields[k]
-    if data["father"]:
-        data["father"] = check_fields(data["father"], fields)
-    if data["mother"]:
-        data["mother"] = check_fields(data["mother"], fields)
-    return data
+import csv
+from json_manager import *
     
 
 class DataService:
@@ -95,23 +10,24 @@ class DataService:
         if reduced:
             self.reduced_text = "_reduced"
         
-        self.data = {}
+        self.data_list = []
+        self.headers = []
         self.colors = {}
         self.cities = []
         
         self.load_local_data()
         
     def check_fields(self, fields):
-        check_fields(self.data, fields)
-        with open("data/family" + self.reduced_text + ".json", 'w') as f:
-            json.dump(self.data, f)
+        for field in fields:
+            if field not in self.headers[0]:
+                return "Field : " + field + " not found"
         return "Fields checked"
     
     def get_max_id(self):
-        return max_id(self.data)
+        return max_id(self.headers, self.data_list)
     
     def get_data(self):
-        return self.data
+        return list_to_json(self.data_list, self.headers, 0)
     
     def get_colors(self):
         return self.colors
@@ -119,55 +35,98 @@ class DataService:
     def get_cities(self):
         return self.cities
     
-    def update_person(self, dict: dict):
-        self.data = update_person(self.data, dict)
-    
-        self.save_local_data()
+    def update_person(self, id, dict: dict):
+        idx = next((self.data_list.index(x) for x in self.data_list if x[self.headers[0].index("id")] == id), -1)
+        if idx >= 0:
+            keys = list(dict.keys())
             
-        return "Person updated"
+            for key in keys:
+                if key in self.headers[0]:
+                    if key == "notes":
+                        self.data_list[idx][self.headers[0].index(key)] = repr(dict[key])
+                    else:
+                        self.data_list[idx][self.headers[0].index(key)] = eval(self.headers[1][self.headers[0].index(key)])(dict[key])
+        
+            self.save_local_data()
+                
+            return "Person updated"
+        return "Person id not valid"
     
     def update_parent_visibility(self, id):
-        self.data = update_parent_visibility(self.data, id)
-        return "Visibility updated"
-    
-    def add_parent(self, id, dict:dict):
-        awaited_keys = ['id', 'surname', 'name', 'gender', 'birth', 'death', 'wedding', 'birth_city', 'wedding_city', 'death_city', 'notes', 'show_parent']
-        for k in awaited_keys:
-            if k not in dict.keys():
-                return "Missing keys"
-        if dict["id"] < 0:
-            return "Wrong id"
-        dict["father"] = {}
-        dict["mother"] = {}
+        idx = next((self.data_list.index(x) for x in self.data_list if x[self.headers[0].index("id")] == id), -1)
+        if idx >= 0:
+            try:
+                self.data_list[idx][self.headers[0].index("show_parent")] = not self.data_list[idx][self.headers[0].index("show_parent")]
+                return "Visibility updated"
+            except ValueError as e:
+                return "Visibility error : " + e
         
-        self.data = add_parent(self.data, id, dict)
+        return "Person id not valid"
+    
+    def add_parent(self, id, gender):
+        idx = next((self.data_list.index(x) for x in self.data_list if x[self.headers[0].index("id")] == id), -1)
+        new_id = max_id(self.headers, self.data_list) + 1
+        try:
+            if idx >= 0:
+                parent = []
+                for typ in self.headers[1]:
+                    parent.append(eval(typ)())
+                parent[self.headers[0].index("id")] = new_id
+                parent[self.headers[0].index("gender")] = gender
+                parent[self.headers[0].index("father")] = -1
+                parent[self.headers[0].index("mother")] = -1
+                parent[self.headers[0].index("notes")] = repr("")
+                parent[self.headers[0].index("generation")] = self.data_list[idx][self.headers[0].index("generation")] + 1
+                if gender == "M":
+                    self.data_list[idx][self.headers[0].index("father")] = new_id
+                    parent[self.headers[0].index("name")] = self.data_list[idx][self.headers[0].index("name")]
+                else:
+                    self.data_list[idx][self.headers[0].index("mother")] = new_id
+                self.data_list.append(parent)
+        except ValueError as e:
+            return "Adding parent failed : " + e
         
         self.save_local_data()
         
-        return "parent added"
+        return "Parent added"
         
     
     def delete_person(self, id):
-        self.data = delete_person(self.data, id)
+        idx = next((self.data_list.index(x) for x in self.data_list if x[self.headers[0].index("id")] == id), -1)
+        if idx >= 0:
+            to_delete = [idx]
+            need_check = True
+            parent_pos = [self.headers[0].index(x) for x in self.headers[0] if x in ["mother", "father"]]
+            while need_check:
+                need_check, to_delete = find_person_to_delete(self.data_list, to_delete, parent_pos)
+            to_delete = sorted(to_delete, key=lambda x: x, reverse=True)
+            print(to_delete)
+            
+            for person in to_delete:
+                self.data_list.pop(person)
+            for i in range(len(self.data_list)):
+                for j in parent_pos:
+                    if self.data_list[i][j] in to_delete:
+                        self.data_list[i][j] = -1
+        
+        remove_empty_ids(self.data_list, self.headers)
         
         self.save_local_data()
         
         return "Person deleted"
     
     def load_local_data(self):
-        with open("data/family" + self.reduced_text + ".json") as f:
-            self.data = json.load(f)
+        self.headers, self.data_list = load_list("data/family" + self.reduced_text + ".csv")
         
         with open("data/colors" + self.reduced_text + ".json") as f:
             self.colors = json.load(f)
         
-        self.cities = cities(self.data, [])
+        self.cities = cities(self.headers, self.data_list)
         
     def save_local_data(self):
-        with open("data/family" + self.reduced_text + ".json", 'w') as f:
-            json.dump(self.data, f)
+        save_csv("data/family" + self.reduced_text + ".csv", self.headers, self.data_list)
         
-        new_names = get_names(self.data, [])
+        new_names = get_names(self.headers[0], self.data_list)
         new_colors = []
         
         for name in new_names:
@@ -180,5 +139,5 @@ class DataService:
         with open("data/colors" + self.reduced_text + ".json", 'w') as f:
             json.dump(self.colors, f)
         
-        self.cities = cities(self.data, [])
+        self.cities = cities(self.headers, self.data_list)
         

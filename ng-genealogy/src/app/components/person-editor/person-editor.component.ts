@@ -110,27 +110,15 @@ export class PersonEditorComponent {
   }
 
   onAddParentClicked(isFather:boolean):void {
-    const parent = new Person()
+    var gender = "F"
     if (isFather) {
-      parent.gender = "M"
-    } else {
-      parent.gender = "F"
+      gender = "M"
     }
-    parent.generation = this.person.generation + 1
-    this.personService.getMaxId().subscribe({
+    this.personService.postAddParent(this.person.id, gender).subscribe({
       next: (data) => {
-        parent.id = data + 1
-
-        this.personService.postAddParent(this.person.id, parent).subscribe({
-          next: (data) => {
-            console.log(data)
-            this.treeService.setTree()
-            this.onClicked()
-          },
-          error: (err) => {
-            console.log(err)
-          }
-        });
+        console.log(data)
+        this.treeService.setTree()
+        this.onClicked()
       },
       error: (err) => {
         console.log(err)

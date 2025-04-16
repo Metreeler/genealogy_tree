@@ -5,6 +5,7 @@ __pycache__/
 .angular/
 *.Identifier
 family*.json
+family*.csv
 colors*.json
 
 

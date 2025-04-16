@@ -41,7 +41,8 @@ export class PersonService {
   }
 
   postUpdatePerson(person: Person): Observable<BackResponse> {
-    return this.http.post<BackResponse>("http://localhost:8000/update", person)
+    const url = `http://localhost:8000/update/${person.id}`
+    return this.http.post<BackResponse>(url, person)
   }
 
   postUpdateParentVisibility(childId: number): Observable<BackResponse> {
@@ -49,9 +50,9 @@ export class PersonService {
     return this.http.post<BackResponse>(url, {})
   }
 
-  postAddParent(childId: number, parent: Person): Observable<BackResponse> {
-    const url = `http://localhost:8000/parent/${childId}`
-    return this.http.post<BackResponse>(url, parent)
+  postAddParent(childId: number, gender: string): Observable<BackResponse> {
+    const url = `http://localhost:8000/parent/${childId}/${gender}`
+    return this.http.post<BackResponse>(url, {})
   }
   
   deletePerson(id: number): Observable<BackResponse> {

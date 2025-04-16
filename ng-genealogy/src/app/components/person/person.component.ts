@@ -42,6 +42,8 @@ export class PersonComponent{
         next: (data) => {
           console.log(data)
           this.treeService.setTree()
+          this.personService.selectedPerson.set(undefined)
+          document.documentElement.style.setProperty("--editor-width", "0vw")
         },
         error: (err) => {
           console.log(err)
