@@ -88,10 +88,7 @@ def load_list(file_name):
         
         for j in range(len(headers[0])):
             for i in range(len(person_list)):
-                if headers[0][i] == "notes":
-                    person_list[i][j] = eval(eval(person_list[i][j]))
-                else:
-                    person_list[i][j] = eval(headers[1][j])(person_list[i][j])
+                person_list[i][j] = eval(headers[1][j])(person_list[i][j])
         
         person_list = remove_empty_ids(person_list, headers)
                             

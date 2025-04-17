@@ -4,7 +4,7 @@ from data_service import DataService
 
 app = FastAPI()
     
-data_service = DataService(True)
+data_service = DataService(False)
 
 origins = [
     "*",

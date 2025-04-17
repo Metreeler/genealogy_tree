@@ -71,8 +71,6 @@ def json_to_list(data, headers):
             else:
                 out[0].append(repr(data[key]))
     
-    print(out)
-    
     if data["father"]:
         out[0].append(data["father"]["id"])
         father_list = json_to_list(data["father"], headers)
@@ -152,7 +150,11 @@ def load_list_as_json(file_name):
 
 def save_json_as_csv(file_name, data):
     headers = list(data.keys())
-    if "id" in headers and "father" in headers and "mother" in headers and "show_parent" in headers:
+    headers_type = []
+    for head in headers:
+        headers_type.append(type(data[head]).__name__)
+        
+    if "id" in headers and "father" in headers and "mother" in headers and "show_parent" in headers and "notes" in headers:
         headers.append(headers.pop(headers.index("father")))
         headers.append(headers.pop(headers.index("mother")))
         csv_out = sorted(json_to_list(data, headers), key=lambda x: x[0])
@@ -161,6 +163,12 @@ def save_json_as_csv(file_name, data):
         father_id_position = headers.index("father")
         mother_id_position = headers.index("mother")
         show_parent_id_position = headers.index("show_parent")
+        notes_position = headers.index("notes")
+        
+        headers_type[id_position] = type(int()).__name__
+        headers_type[father_id_position] = type(int()).__name__
+        headers_type[mother_id_position] = type(int()).__name__
+        headers_type[show_parent_id_position] = type(bool()).__name__
         
         for j in [id_position, father_id_position, mother_id_position]:
             for i in range(len(csv_out)):
@@ -175,6 +183,13 @@ def save_json_as_csv(file_name, data):
             except ValueError:
                 print("wrong show_parent_value :", i, csv_out[i][show_parent_id_position])
                 return {}
+            
+        for i in range(len(csv_out)):
+            try:
+                csv_out[i][notes_position] = csv_out[i][notes_position]
+            except ValueError:
+                print("wrong show_parent_value :", i, csv_out[i][notes_position])
+                return {}
                     
         for i in range(len(csv_out)):
             if i < int(csv_out[i][id_position]):
@@ -184,6 +199,7 @@ def save_json_as_csv(file_name, data):
                         if csv_out[j][h] > i:
                             csv_out[j][h] += diff
         
+        csv_out.insert(0, headers_type)
         csv_out.insert(0, headers)
         
         with open(file_name, 'w', newline='') as csvfile:

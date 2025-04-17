@@ -8,7 +8,7 @@ class DataService:
     def __init__(self, reduced):
         self.reduced_text = ""
         if reduced:
-            self.reduced_text = "_reduced"
+            self.reduced_text = "_reduced_new"
         
         self.data_list = []
         self.headers = []
@@ -75,6 +75,7 @@ class DataService:
                 parent[self.headers[0].index("gender")] = gender
                 parent[self.headers[0].index("father")] = -1
                 parent[self.headers[0].index("mother")] = -1
+                parent[self.headers[0].index("show_parent")] = True
                 parent[self.headers[0].index("notes")] = repr("")
                 parent[self.headers[0].index("generation")] = self.data_list[idx][self.headers[0].index("generation")] + 1
                 if gender == "M":
@@ -100,7 +101,6 @@ class DataService:
             while need_check:
                 need_check, to_delete = find_person_to_delete(self.data_list, to_delete, parent_pos)
             to_delete = sorted(to_delete, key=lambda x: x, reverse=True)
-            print(to_delete)
             
             for person in to_delete:
                 self.data_list.pop(person)
