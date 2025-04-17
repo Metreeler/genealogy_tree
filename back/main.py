@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from data_service import DataService
 
 app = FastAPI()
-    
+
 data_service = DataService(False)
 
 origins = [

@@ -8,7 +8,7 @@ class DataService:
     def __init__(self, reduced):
         self.reduced_text = ""
         if reduced:
-            self.reduced_text = "_reduced_new"
+            self.reduced_text = "_reduced"
         
         self.data_list = []
         self.headers = []
