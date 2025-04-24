@@ -1,6 +1,5 @@
 import json
 import random
-import csv
 from json_manager import *
     
 
@@ -18,9 +17,19 @@ class DataService:
         self.load_local_data()
         
     def check_fields(self, fields):
-        for field in fields:
-            if field not in self.headers[0]:
-                return "Field : " + field + " not found"
+        if self.headers == [[], []]:
+            for field in fields:
+                self.headers[0].append(field)
+                self.headers[1].append(type(fields[field]).__name__)
+            self.headers[0].append("father")
+            self.headers[1].append("int")
+            self.headers[0].append("mother")
+            self.headers[1].append("int")
+            return "Fields created"
+        else:
+            for field in fields:
+                if field not in self.headers[0]:
+                    return "Field : " + field + " not found"
         return "Fields checked"
     
     def get_max_id(self):
@@ -118,8 +127,12 @@ class DataService:
     def load_local_data(self):
         self.headers, self.data_list = load_list("data/family" + self.reduced_text + ".csv")
         
-        with open("data/colors" + self.reduced_text + ".json") as f:
-            self.colors = json.load(f)
+        try:
+            with open("data/colors" + self.reduced_text + ".json") as f:
+                self.colors = json.load(f)
+        except FileNotFoundError as e:
+            print(e)
+            self.colors = {}
         
         self.cities = cities(self.headers, self.data_list)
         
@@ -130,10 +143,17 @@ class DataService:
         new_colors = []
         
         for name in new_names:
-            new_colors.append(next((color for color in self.colors["colors"] if color["name"] == name), {
-                        "name": name,
-                        "color": "#"+''.join([random.choice('456789ABCDEF') + random.choice('0123456789ABCDEF') for _ in range(3)])
-                    }))
+            try:
+                new_colors.append(next((color for color in self.colors["colors"] if color["name"] == name), {
+                            "name": name,
+                            "color": "#"+''.join([random.choice('456789ABCDEF') + random.choice('0123456789ABCDEF') for _ in range(3)])
+                        }))
+            except KeyError as e:
+                print("Empty dict, key not found :", e)
+                new_colors.append({
+                            "name": name,
+                            "color": "#"+''.join([random.choice('456789ABCDEF') + random.choice('0123456789ABCDEF') for _ in range(3)])
+                        })
         self.colors["colors"] = new_colors
         
         with open("data/colors" + self.reduced_text + ".json", 'w') as f:

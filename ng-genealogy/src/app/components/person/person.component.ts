@@ -16,11 +16,13 @@ import { TreeService } from '../../services/tree.service';
 })
 export class PersonComponent{
   person = input.required<Person|undefined>();
+
   color = computed(() => {
     const person = this.person()
     const c = this.personService.colors()
     return (c.colors.find(color => color.name == person?.name)?.color || "#3EF1B5")
   });
+  
   isVisible = computed(() => this.treeService.scale() > 0.4 ? false : true);
 
   constructor(private personService: PersonService, private treeService: TreeService) {

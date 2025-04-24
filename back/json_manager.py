@@ -1,4 +1,5 @@
 import csv
+import os
 
 def max_id(headers, data):
     return data[-1][headers[0].index("id")]
@@ -36,26 +37,38 @@ def add_parent(data, id, parent):
 
 def get_names(headers, data):
     out = []
-    id = headers.index("name")
+    name_pos = headers.index("name")
     for row in data:
-        if row[id] != "":
-            out.append(row[id])
+        if row[name_pos] != "" and row[name_pos] not in out:
+            out.append(row[name_pos])
     return out
 
 def list_to_json(person_list, headers, id):
     out = {}
-    try:
+    if person_list == [[]]:
         for i in range(len(headers[0])):
-                if headers[0][i] == "father":
-                    out["father"] = list_to_json(person_list, headers, int(person_list[id][i])) if int(person_list[id][i]) >= 0 else {}
-                elif headers[0][i] == "mother":
-                    out["mother"] = list_to_json(person_list, headers, int(person_list[id][i])) if int(person_list[id][i]) >= 0 else {}
-                elif headers[0][i] == "notes":
-                    out[headers[0][i]] = eval(person_list[id][i])
-                else:
-                    out[headers[0][i]] = eval(headers[1][i])(person_list[id][i])
-    except ValueError as e:
-        print("problem :", e)
+            if headers[0][i] in ["father", "mother"]:
+                person_list[0].append(-1)
+                out[headers[0][i]] = -1
+            elif headers[0][i] == "name":
+                person_list[0].append("CLICK ME")
+                out[headers[0][i]] = "CLICK ME"
+            else:
+                person_list[0].append(eval(headers[1][i])())
+                out[headers[0][i]] = eval(headers[1][i])()
+    else:
+        try:
+            for i in range(len(headers[0])):
+                    if headers[0][i] == "father":
+                        out["father"] = list_to_json(person_list, headers, int(person_list[id][i])) if int(person_list[id][i]) >= 0 else {}
+                    elif headers[0][i] == "mother":
+                        out["mother"] = list_to_json(person_list, headers, int(person_list[id][i])) if int(person_list[id][i]) >= 0 else {}
+                    elif headers[0][i] == "notes":
+                        out[headers[0][i]] = eval(person_list[id][i])
+                    else:
+                        out[headers[0][i]] = eval(headers[1][i])(person_list[id][i])
+        except ValueError as e:
+            print("problem :", e)
     return out
 
 def remove_empty_ids(person_list, headers):
@@ -75,6 +88,15 @@ def remove_empty_ids(person_list, headers):
     return person_list
 
 def load_list(file_name):
+    if not os.path.exists(file_name):
+        folders = file_name.split("/")
+        folder_path = ""
+        
+        for f in folders[:-1]:
+            folder_path += f + "/"
+            if not os.path.isdir(folder_path):
+                os.mkdir(folder_path)
+    
     try:
         with open(file_name, 'r', newline='') as csvfile:
             csv_reader = csv.reader(csvfile)
@@ -96,9 +118,9 @@ def load_list(file_name):
         person_list = remove_empty_ids(person_list, headers)
                             
         return headers, person_list
-    except ValueError as e:
-        print("Main fields missing", e)
-        return [], []
+    except (ValueError, FileNotFoundError) as e:
+        print(e)
+        return [[], []], [[]]
 
 def json_to_list(data, headers):
     out = [[]]

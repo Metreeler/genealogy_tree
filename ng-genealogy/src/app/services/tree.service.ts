@@ -9,18 +9,18 @@ import { BackResponse } from '../classes/back-response';
 })
 export class TreeService {
   scale = signal(0.5)
-  tree: WritableSignal<Person|undefined> = signal(undefined)
+  tree: WritableSignal<Person> = signal(new Person())
 
   constructor(private http: HttpClient) { 
     this.checkFields().subscribe({
       next: (data) => {
         console.log(data)
+        this.setTree()
       },
       error: (err) => {
         console.log(err)
       }
     });
-    this.setTree()
   }
 
   getTree(): Observable<Person> {

@@ -45,6 +45,11 @@ def check_fields(item: dict):
 def create_item(id:int, item: dict):
     return {"message": data_service.update_person(id, item)}
 
+# curl --header "Content-Type: application/json" \
+#   --request POST \
+#   --data '{"wedding":"marie"}' \
+#   http://localhost:8000/update/0
+
 @app.post("/parent/{id}/{gender}")
 def add_parent(id:int, gender:str):
     return {"message": data_service.add_parent(id, gender)}
