@@ -1,5 +1,5 @@
 .editor {
-  background-color: rgb(102, 205, 170);
+  background-color: rgb(128, 201, 217);
   display: block;
   width: var(--editor-width);
   height: 100%;
@@ -16,7 +16,7 @@
 }
 
 .close-button {
-  background-color: rgb(77, 149, 125);
+  background-color: rgb(91, 143, 155);
   width: 3rem;
   height: 100%;
   display: flex;

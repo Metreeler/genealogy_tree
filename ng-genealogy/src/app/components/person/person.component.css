@@ -1,70 +1,72 @@
 :host {
-    --path-width: calc(var(--scale-value) * 4px);
-    --path-height: calc(var(--scale-value) * 7rem);
+  --path-width: calc(var(--scale-value) * 4px);
+  --path-height: calc(var(--scale-value) * 7rem);
 
-    --person-height: calc(var(--scale-value) * 8rem);
-    --person-width: calc(var(--scale-value) * 11rem);
+  --person-height: calc(var(--scale-value) * 8rem);
+  --person-width: calc(var(--scale-value) * 11rem);
 
-    --name-width: calc(var(--person-width) - 1rem * var(--scale-value));
-    --border-radius: calc(var(--scale-value) * 1rem);
-    --padding: calc(var(--scale-value) * 0.5rem);
+  --name-width: calc(var(--person-width) - 1rem * var(--scale-value));
+  --border-radius: calc(var(--scale-value) * 1rem);
+  --padding: calc(var(--scale-value) * 0.5rem);
 
-    --font-size: calc(0.89rem * var(--scale-value));
+  --font-size: calc(0.89rem * var(--scale-value));
 }
 
 .name {
-    width: calc(var(--name-width) - 2 * var(--padding));
-    height: var(--person-height);
-    border-radius: var(--border-radius);
-    text-align: center;
-    word-wrap: break-word;
-    padding: var(--padding);
+  width: calc(var(--name-width) - 2 * var(--padding));
+  height: var(--person-height);
+  border-radius: var(--border-radius);
+  text-align: center;
+  word-wrap: break-word;
+  padding: var(--padding);
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
 }
 
 .flex-row {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 }
 
 .person {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: "IBMPlexSans";
-    font-size: var(--font-size);
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "IBMPlexSans";
+  font-size: var(--font-size);
+  width: 100%;
 }
 
 .parents {
-    display: flex;
-    flex-direction: row;
-    position: relative;
+  display: flex;
+  flex-direction: row;
+  position: relative;
 }
 
 .parent {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-width: var(--person-width);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-width: var(--person-width);
 }
 
 .empty {
-    width: calc((100% - var(--name-width)) / 2);
+  width: calc((100% - var(--name-width)) / 2);
 }
 
 .wedding-link {
-    width: calc((100% - var(--name-width)) / 2);
-    position: relative;
-    /* top: calc((var(--person-height) + var(--padding) - var(--path-width)) / 2); */
-    top: calc(var(--person-height) / 2 + var(--padding));
-    height: var(--path-width);
-    background-color: black;
+  width: calc((100% - var(--name-width)) / 2);
+  position: relative;
+  /* top: calc((var(--person-height) + var(--padding) - var(--path-width)) / 2); */
+  top: calc(var(--person-height) / 2 + var(--padding));
+  height: var(--path-width);
+  background-color: gray;
 }
 
 .parent-link {
-    background-color: black;
-    height: var(--path-height);
-    width: var(--path-width);
-    margin-top: calc(-1 * (var(--person-height) / 2 + var(--padding)));
+  background-color: gray;
+  height: var(--path-height);
+  width: var(--path-width);
+  margin-top: calc(-1 * (var(--person-height) / 2 + var(--padding)));
 }

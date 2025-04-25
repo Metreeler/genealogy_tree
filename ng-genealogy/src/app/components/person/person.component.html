@@ -1,53 +1,55 @@
 <div class="person">
-    @if (hasFather() || hasMother()) {
-        <div class="parents">
-            <div class="parent">
-                @if (hasFather()) {
-                    <app-person  [person]="person()?.father" />
-                }
-            </div>
-            <div class="parent">
-                @if (hasMother()) {
-                    <app-person  [person]="person()?.mother" />
-                }
-            </div>
-        </div>
-    }
-
-    @if (hasFather() || hasMother()) {
-        <div class="parent-link"></div>
-    }
-
-    <div class="flex-row">
-        @if (person()?.gender == "F" && person()?.id != 0) {
-            <div class="wedding-link"></div>
-        } @else {
-            <div class="empty"></div>
-        }
-        
-        <div class="name" [style.background-color]="color()" (click)="selectPerson()" (contextmenu)="onRightClick()"> 
-            <div [hidden]="isVisible()">
-                {{ person()?.surname }} 
-                <br> {{ person()?.name }}
-                <br>
-                @if (person()?.birth != "") {
-                    x {{ person()?.birth }}
-                }
-                <br>
-                @if (person()?.wedding != "") {
-                    o {{ person()?.wedding }}
-                }
-                <br>
-                @if (person()?.death != "") {
-                    + {{ person()?.death }}
-                }
-            </div>
-        </div>
-
-        @if (person()?.gender == "M" && person()?.id != 0) {
-            <div class="wedding-link"></div>
-        } @else {
-            <div class="empty"></div>
-        }
+  @if (hasFather() || hasMother()) {
+  <div class="parents">
+    <div class="parent">
+      @if (hasFather()) {
+      <app-person [person]="person()?.father" />
+      }
     </div>
+    <div class="parent">
+      @if (hasMother()) {
+      <app-person [person]="person()?.mother" />
+      }
+    </div>
+  </div>
+  } @if (hasFather() || hasMother()) {
+  <div class="parent-link"></div>
+  }
+
+  <div class="flex-row">
+    @if (person()?.gender == "F" && person()?.id != 0) {
+    <div class="wedding-link"></div>
+    } @else {
+    <div class="empty"></div>
+    }
+
+    <div
+      class="name"
+      [style.background-color]="color()"
+      [style.color]="colorText()"
+      (click)="selectPerson()"
+      (contextmenu)="onRightClick()"
+    >
+      <div [hidden]="isVisible()">
+        <b> {{ person()?.name }}</b>
+        <br />
+        <b>{{ person()?.surname }}</b>
+        <br />
+        @if (person()?.birth != "") { ✦ {{ person()?.birth }}
+        }
+        <br />
+        @if (person()?.wedding != "") { ⚭ {{ person()?.wedding }}
+        }
+        <br />
+        @if (person()?.death != "") { ✝ {{ person()?.death }}
+        }
+      </div>
+    </div>
+
+    @if (person()?.gender == "M" && person()?.id != 0) {
+    <div class="wedding-link"></div>
+    } @else {
+    <div class="empty"></div>
+    }
+  </div>
 </div>

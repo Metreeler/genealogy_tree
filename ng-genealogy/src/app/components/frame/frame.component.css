@@ -1,21 +1,20 @@
-:host{
-    width: calc(100vw - var(--editor-width));
-    height: 100%;
+:host {
+  width: calc(100vw - var(--editor-width));
+  height: 100%;
 }
 
 .frame {
-    background-color: rgb(236, 234, 82);
-    width: calc(100% - 2vh);
-    height: 98%;
-    position: relative;
-    top: 1vh;
-    left: 1vh;
+  width: calc(100% - 2vh);
+  height: 98%;
+  position: relative;
+  top: 1vh;
+  left: 1vh;
 }
 
 .content {
-    width: calc(100% - 2vh);
-    height: calc(100% - 2vh);
-    position: relative;
-    top: 1vh;
-    left: 1vh;
+  width: calc(100% - 2vh);
+  height: calc(100% - 2vh);
+  position: relative;
+  top: 1vh;
+  left: 1vh;
 }

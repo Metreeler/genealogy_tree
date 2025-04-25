@@ -11,151 +11,135 @@
         SURE TO DELETE
       </button>
 
-      <div class="mb-1">
-        <label class="form-label small">Name</label>
-        <input
-          class="form-control form-control-sm"
-          type="text"
-          (focusout)="saveData()"
-          (input)="onDataUpdated()"
-          [(ngModel)]="person.name"
-          placeholder="Enter name"
-        />
+      <div class="d-flex gap-2 mb-1">
+        <div class="flex-grow-1">
+          <label class="form-label small">Name</label>
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            (focusout)="saveData()"
+            (input)="onDataUpdated()"
+            [(ngModel)]="person.name"
+            placeholder="Enter name"
+          />
+        </div>
+
+        <div class="flex-grow-1">
+          <label class="form-label small">Surname</label>
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            (focusout)="saveData()"
+            (input)="onDataUpdated()"
+            [(ngModel)]="person.surname"
+            placeholder="Enter surname"
+          />
+        </div>
       </div>
 
-      <div class="mb-1">
-        <label class="form-label small">Surname</label>
-        <input
-          class="form-control form-control-sm"
-          type="text"
-          (focusout)="saveData()"
-          (input)="onDataUpdated()"
-          [(ngModel)]="person.surname"
-          placeholder="Enter surname"
-        />
+      <!-- Birth date and city -->
+      <div class="d-flex gap-2 mb-1">
+        <div class="flex-grow-1">
+          <label class="form-label small">Birth date</label>
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            [(ngModel)]="person.birth"
+          />
+        </div>
+        <div class="flex-grow-1">
+          <label class="form-label small">Birth city</label>
+          <input
+            list="my-city-list"
+            class="form-control form-control-sm"
+            type="text"
+            [(ngModel)]="person.birth_city"
+          />
+        </div>
       </div>
 
-      <div class="mb-1">
-        <label class="form-label small">Birth date</label>
-        <input
-          class="form-control form-control-sm"
-          type="text"
-          (focusout)="saveData()"
-          (input)="onDataUpdated()"
-          [(ngModel)]="person.birth"
-          placeholder="Enter birth date"
-        />
+      <!-- Wedding date and city -->
+      <div class="d-flex gap-2 mb-1">
+        <div class="flex-grow-1">
+          <label class="form-label small">Wedding date</label>
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            [(ngModel)]="person.wedding"
+          />
+        </div>
+        <div class="flex-grow-1">
+          <label class="form-label small">Wedding city</label>
+          <input
+            list="my-city-list"
+            class="form-control form-control-sm"
+            type="text"
+            [(ngModel)]="person.wedding_city"
+          />
+        </div>
       </div>
 
-      <div class="mb-1">
-        <label class="form-label small">Wedding date</label>
-        <input
-          class="form-control form-control-sm"
-          type="text"
-          (focusout)="saveData()"
-          (input)="onDataUpdated()"
-          [(ngModel)]="person.wedding"
-          placeholder="Enter wedding date"
-        />
+      <!-- Death date and city -->
+      <div class="d-flex gap-2 mb-1">
+        <div class="flex-grow-1">
+          <label class="form-label small">Death date</label>
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            [(ngModel)]="person.death"
+          />
+        </div>
+        <div class="flex-grow-1">
+          <label class="form-label small">Death city</label>
+          <input
+            list="my-city-list"
+            class="form-control form-control-sm"
+            type="text"
+            [(ngModel)]="person.death_city"
+          />
+        </div>
       </div>
 
-      <div class="mb-1">
-        <label class="form-label small">Death date</label>
-        <input
-          class="form-control form-control-sm"
-          type="text"
-          (focusout)="saveData()"
-          (input)="onDataUpdated()"
-          [(ngModel)]="person.death"
-          placeholder="Enter death date"
-        />
+      <!-- Job and Address -->
+      <div class="d-flex gap-2 mb-1">
+        <div class="flex-grow-1">
+          <label class="form-label small">Job</label>
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            [(ngModel)]="person.job"
+          />
+        </div>
+        <div class="flex-grow-1">
+          <label class="form-label small">Address</label>
+          <input
+            list="my-city-list"
+            class="form-control form-control-sm"
+            type="text"
+            [(ngModel)]="person.address"
+          />
+        </div>
       </div>
 
-      <div class="mb-1">
-        <label class="form-label small">Birth city</label>
-        <input
-          list="my-city-list"
-          class="form-control form-control-sm"
-          type="text"
-          (focusout)="saveData()"
-          (input)="onDataUpdated()"
-          [(ngModel)]="person.birth_city"
-          placeholder="Select birth city"
-        />
-      </div>
-
-      <div class="mb-1">
-        <label class="form-label small">Wedding city</label>
-        <input
-          list="my-city-list"
-          class="form-control form-control-sm"
-          type="text"
-          (focusout)="saveData()"
-          (input)="onDataUpdated()"
-          [(ngModel)]="person.wedding_city"
-          placeholder="Select wedding city"
-        />
-      </div>
-
-      <div class="mb-1">
-        <label class="form-label small">Death city</label>
-        <input
-          list="my-city-list"
-          class="form-control form-control-sm"
-          type="text"
-          (focusout)="saveData()"
-          (input)="onDataUpdated()"
-          [(ngModel)]="person.death_city"
-          placeholder="Select death city"
-        />
-      </div>
-
-      <div class="mb-1">
-        <label class="form-label small">Job</label>
-        <input
-          class="form-control form-control-sm"
-          type="text"
-          (focusout)="saveData()"
-          (input)="onDataUpdated()"
-          [(ngModel)]="person.job"
-          placeholder="Enter job"
-        />
-      </div>
-
-      <div class="mb-1">
-        <label class="form-label small">Address</label>
-        <input
-          list="my-city-list"
-          class="form-control form-control-sm"
-          type="text"
-          (focusout)="saveData()"
-          (input)="onDataUpdated()"
-          [(ngModel)]="person.address"
-          placeholder="Enter address"
-        />
-      </div>
-
+      <!-- Show parents checkbox -->
       <div class="mb-1 form-check">
         <input
           class="form-check-input"
           type="checkbox"
-          (change)="onShowParent()"
           [(ngModel)]="person.show_parent"
           id="showParentsCheck"
         />
-        <label class="form-check-label small" for="showParentsCheck">
-          Show parents
-        </label>
+        <label class="form-check-label small" for="showParentsCheck"
+          >Show parents</label
+        >
       </div>
 
+      <!-- Notes textarea -->
       <div class="mb-1">
         <label class="form-label small">Notes</label>
         <textarea
-          (focusout)="saveData()"
-          (input)="onDataUpdated()"
           class="form-control form-control-sm"
           [(ngModel)]="person.notes"
-          placeholder="Enter notes"
           rows="2"
         ></textarea>
       </div>
